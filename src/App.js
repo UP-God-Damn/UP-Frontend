@@ -13,7 +13,6 @@ import SignupPage from "./page/SignupPage";
 import ViewPage from "./page/ViewPage";
 import CreatePage from "./page/CreatePage";
 import AmendPage from "./page/AmendPage";
-import SignupPage_2 from "./page/SignupPage_2";
 
 function App() {
   return (
@@ -23,7 +22,6 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/signup_next" element={<SignupPage_2 />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/view" element={<ViewPage />} />
           <Route path="/create" element={<CreatePage />} />
