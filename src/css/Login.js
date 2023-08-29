@@ -129,7 +129,7 @@ export const Gradation_1 = styled.div`
   width: 400px;
   height: 550px;
   left: 363px;
-  top: 335px;
+  top: 305px;
   background: radial-gradient(
     99.74% 59.74% at 0.08% 62.99%,
     #ffffff 0%,
@@ -140,7 +140,7 @@ export const Gradation_1 = styled.div`
 export const Gradation_2 = styled.div`
   position: absolute;
   width: 465px;
-  height: 425px;
+  height: 395px;
   left: 500px;
   top: 460px;
   border-radius: 0px 0px 0px 0px;

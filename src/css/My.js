@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import MainCalender from "../icons/MainCalender";
 import MainPeople from "../icons/MainPeople";
 import Mainlange from "../icons/Mainlange";
+import profile from "../icons/profile";
 
 export const Background = styled.div`
   background-color: #f0f0f0;
@@ -38,6 +39,7 @@ export const logout = styled.button`
   color: white;
   border-radius: 10px;
   font-size: 14px;
+  border: none;
   &:hover {
     cursor: pointer;
     background-color: black;
@@ -226,9 +228,10 @@ export const list = styled.div`
 `;
 
 export const Img = styled.div`
-  background-color: black;
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin-left: 30px;
 `;
+
+export const imgSrc = styled(profile)``;
