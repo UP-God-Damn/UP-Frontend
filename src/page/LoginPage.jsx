@@ -1,29 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as S from "../css/Login";
+import axios from "axios";
 
 function LoginPage() {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
+  const [signData, setSignData] = useState({
+    accountId: "",
+    password: "",
+  });
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setSignData({
+      ...signData,
+      [name]: value,
+    });
+  };
+
+  useEffect(() => {
+    console.log(signData);
+  }, [signData]);
 
   const onCheck = () => {
-    if (window.confirm("아이디와 비밀번호 체크")) {
-      alert("환영합니다.");
-      window.location.assign("/");
-    } else {
-      alert("아이디나 비밀번호가 틀렸습니다.");
-    }
+    axios
+      .post("http://13.209.66.252:8080/user/login", {
+        accountId: signData.accountId,
+        password: signData.password,
+      })
+      .then((res) => {
+        const { accessToken, refreshToken } = res.data;
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        alert("환영합니다.");
+        window.location.assign("/");
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 409) {
+          alert("비밀번호를 확인해주세요.");
+        } else {
+          console.log(err);
+          alert("에러가 발생했습니다.");
+        }
+      });
   };
 
   const onSignup = () => {
     window.location.assign("/signup");
-  };
-
-  const ChangePa = (input) => {
-    setPassword(input.target.value);
-  };
-
-  const ChangeId = (input) => {
-    setId(input.target.value);
   };
 
   return (
@@ -42,15 +65,19 @@ function LoginPage() {
           <S.Label>
             <S.Label_font htmlFor="">아이디</S.Label_font>
             <S.Input
-              onChange={ChangeId}
+              onChange={onChange}
               type="text"
+              id="accountId"
+              name="accountId"
               placeholder="아이디를 입력하세요"
             />
           </S.Label>
           <S.Label>
             <S.Label_font htmlFor="">비밀번호</S.Label_font>
             <S.Input
-              onChange={ChangePa}
+              onChange={onChange}
+              id="password"
+              name="password"
               type="password"
               placeholder="비밀번호를 입력하세요"
             />

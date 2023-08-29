@@ -8,34 +8,58 @@ function SignupPage() {
   const [imgSrc, setImgSrc] = useState("");
   const [pageNum, setPageNum] = useState(true);
   const [idCheck, setIdCheck] = useState(false);
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [signData, setSignData] = useState({
     nickname: "",
     accountId: "",
     password: "",
-    passwordCheck: "",
   });
+  const formData = new FormData();
+  const fileInput = document.querySelector("#fileInput");
+
+  const formD = () => {
+    const request = {
+      nickname: signData.nickname,
+      accountId: signData.accountId,
+      password: signData.password,
+    };
+    formData.append(
+      "request",
+      new Blob([JSON.stringify(request)], { type: "application/json" })
+    );
+    if(fileInput)
+      formData.append("image", fileInput.files[0] | "");
+    server();
+  };
 
   const server = () => {
+    let entries = formData.entries();
+    for (const pair of entries) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
     axios
-      .post("http://52.78.143.155:8080/user/signup", {
-        nickname: signData.nickname,
-        accountId: signData.accountId,
-        password: signData.password,
+      .request({
+        url: `http://13.209.66.252:8080/user/signup`,
+        method: "post",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((res) => {
         alert("가입되었습니다.");
         window.location.assign("/");
       })
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
 
   const onCheck = () => {
-    if(signData.nickname.length >= 2) {
-      if(signData.accountId.length >= 6 && idCheck) {
-        if (signData.password.length && signData.password === signData.passwordCheck) {
+    if (signData.nickname.length >= 2) {
+      if (signData.accountId.length >= 6 && idCheck) {
+        if (signData.password.length && signData.password === passwordCheck) {
           alert("확인되었습니다.");
           setPageNum(false);
         } else {
@@ -57,6 +81,10 @@ function SignupPage() {
     });
   };
 
+  const onPass = (input) => {
+    setPasswordCheck(input.target.value);
+  };
+
   useEffect(() => {
     console.log(signData);
   }, [signData]);
@@ -67,7 +95,7 @@ function SignupPage() {
 
   const onCheck_page = () => {
     if (window.confirm("가입하시겠습니까?")) {
-      server();
+      formD();
     } else {
       alert("취소되었습니다.");
     }
@@ -75,13 +103,13 @@ function SignupPage() {
 
   const onDoublecheck = () => {
     axios
-      .get("http://52.78.143.155:8080/user/(signData.accountId)")
+      .get(`http://13.209.66.252:8080/user/${signData.accountId}`)
       .then((res) => {
         setIdCheck(true);
         alert("사용 가능한 아이디입니다.");
       })
       .catch((err) => {
-        if (err === 409) {
+        if (err.response && err.response.status === 409) {
           alert("사용할 수 없는 아이디입니다.");
         } else {
           alert("에러가 발생했습니다.");
@@ -149,7 +177,7 @@ function SignupPage() {
                   비밀번호 확인
                 </S.Label_font>
                 <S.Input
-                  onChange={onChange}
+                  onChange={onPass}
                   id="passwordCheck"
                   name="passwordCheck"
                   type="password"
@@ -188,6 +216,7 @@ function SignupPage() {
             accept="image/png, image/jpeg"
             ref={imageInputRef}
             onChange={handleChange}
+            id="fileInput"
           />
         </A.Background>
       )}

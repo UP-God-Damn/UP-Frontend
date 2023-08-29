@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as S from "../css/Main";
+import axios from "axios";
 
 function MainPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
+
+  useEffect(() => {
+    axios
+      .get(
+        "http://13.209.66.252:8080/post/search?title=&state=&major=&page=2&size=3"
+      )
+      .then((res) => {
+        alert("res");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  }, []);
 
   const onLogin = () => {
     window.location.assign("/login");

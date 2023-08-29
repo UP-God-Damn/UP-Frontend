@@ -1,14 +1,46 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as S from "../css/Create";
+import axios from "axios";
 
 function CreatePage() {
-  const [title, setTitle] = useState("");
-  const [main, setMain] = useState("");
-  const [langu, setLangu] = useState("");
-  const [major, setMajor] = useState("");
-  const [tag, setTag] = useState("");
+  const [data, setData] = useState({
+    title: "",
+    content: "",
+    language: "",
+    state: "",
+    major: "",
+  });
   const imageInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState([]);
+  const formData = new FormData();
+  const fileInput = document.querySelector("#fileInput");
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  const formD = () => {
+    formData.append("request", data);
+    formData.append("image", fileInput.files);
+    server();
+  };
+
+  const server = () => {
+    axios
+      .post("http://13.209.66.252:8080/post", formData, {
+        headers: {
+          "Content-Type": `application/json`,
+        },
+      })
+      .then((res) => {
+        alert("등록되었습니다.");
+        window.location.assign("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
 
   const handleChange = (e) => {
     const file = e.target.files?.[0];
@@ -27,14 +59,13 @@ function CreatePage() {
   };
 
   const onCreate = () => {
-    if (title.length >= 3) {
-      if (main.length >= 20) {
-        if (langu !== "") {
-          if (major !== "") {
-            if (tag !== "") {
+    if (data.title.length >= 3) {
+      if (data.content.length >= 20) {
+        if (data.language !== "") {
+          if (data.major !== "") {
+            if (data.state !== "") {
               if (window.confirm("등록하시겠습니까?")) {
-                alert("등록되었습니다.");
-                window.location.assign("/");
+                formD();
               } else {
                 alert("취소되었습니다.");
               }
@@ -55,24 +86,12 @@ function CreatePage() {
     }
   };
 
-  const ChangeLanguage = (input) => {
-    setLangu(input.target.value);
-  };
-
-  const ChangeTitle = (input) => {
-    setTitle(input.target.value);
-  };
-
-  const ChangeMain = (input) => {
-    setMain(input.target.value);
-  };
-
-  const onMajorChange = (event) => {
-    setMajor(event.target.value);
-  };
-
-  const onTagChange = (event) => {
-    setTag(event.target.value);
+  const onChange = (e) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
   };
 
   const onBack = () => {
@@ -89,10 +108,12 @@ function CreatePage() {
         <S.title>
           <S.title_label>제목</S.title_label>
           <S.title_input
-            onChange={ChangeTitle}
+            onChange={onChange}
             type="text"
+            id="title"
+            name="title"
             placeholder="제목을 입력해주세요 (3~70자)"
-            maxlength="70"
+            maxLength="70"
           ></S.title_input>
         </S.title>
         <S.two>
@@ -102,43 +123,43 @@ function CreatePage() {
               소문자로 입력해주세요
             </S.language_div>
             <S.language_input
-              onChange={ChangeLanguage}
+              onChange={onChange}
               type="text"
+              id="language"
+              name="language"
               placeholder="사용한 프로그래밍 언어를 입력해주세요"
             ></S.language_input>
           </S.language>
           <S.major>
             <S.major_label>전공</S.major_label>
-            <S.major_select onChange={onMajorChange}>
+            <S.major_select onChange={onChange} id="major" name="major">
               <S.major_option value="">전공을 선택해주세요</S.major_option>
-              <S.major_option value="프론트엔드">프론트엔드</S.major_option>
-              <S.major_option value="백엔드">백엔드</S.major_option>
-              <S.major_option value="디자인">디자인</S.major_option>
-              <S.major_option value="임베디드">임베디드</S.major_option>
-              <S.major_option value="플러터">플러터</S.major_option>
-              <S.major_option value="정보보안">정보보안</S.major_option>
-              <S.major_option value="게임개발">게임개발</S.major_option>
-              <S.major_option value="AI">AI</S.major_option>
+              <S.major_option value="FRONTEND">프론트엔드</S.major_option>
+              <S.major_option value="BACKEND">백엔드</S.major_option>
+              <S.major_option value="EMBEDDED">임베디드</S.major_option>
+              <S.major_option value="FLUTTER">플러터</S.major_option>
               <S.major_option value="IOS">IOS</S.major_option>
-              <S.major_option value="안드로이드">안드로이드</S.major_option>
-              <S.major_option value="기타">기타</S.major_option>
+              <S.major_option value="ANDROID">안드로이드</S.major_option>
+              <S.major_option value="DEVOPS">DEVOPS</S.major_option>
             </S.major_select>
           </S.major>
           <S.tag>
             <S.tag_label>분류</S.tag_label>
-            <S.tag_select onChange={onTagChange}>
+            <S.tag_select onChange={onChange} id="state" name="state">
               <S.tag_option value="">해결 / 질문</S.tag_option>
-              <S.tag_option value="해결">해결</S.tag_option>
-              <S.tag_option value="질문">질문</S.tag_option>
+              <S.tag_option value="SOLUTION">해결</S.tag_option>
+              <S.tag_option value="QUESTION">질문</S.tag_option>
             </S.tag_select>
           </S.tag>
         </S.two>
         <S.contents>
           <S.contents_label>내용</S.contents_label>
           <S.contents_input
-            onChange={ChangeMain}
+            onChange={onChange}
+            id="content"
+            name="content"
             placeholder="내용을 입력해주세요 (20~10000자)"
-            maxlength="10000"
+            maxLength="10000"
           ></S.contents_input>
         </S.contents>
         <S.Img_label>사진</S.Img_label>
