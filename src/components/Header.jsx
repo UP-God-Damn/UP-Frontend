@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import * as S from "../css/Header";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   const onLogo = () => {
     window.location.assign("/");
