@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import * as S from "../css/Create";
+import * as S from "../style/Create";
 import axios from "axios";
 
 function CreatePage() {
@@ -20,26 +20,10 @@ function CreatePage() {
   }, [data]);
 
   const formD = () => {
-    formData.append("request", data);
-    formData.append("image", fileInput.files);
     server();
   };
 
   const server = () => {
-    axios
-      .post("http://13.209.66.252:8080/post", formData, {
-        headers: {
-          "Content-Type": `application/json`,
-        },
-      })
-      .then((res) => {
-        alert("등록되었습니다.");
-        window.location.assign("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
-      });
   };
 
   const handleChange = (e) => {

@@ -1,9 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import * as S from "../css/Header";
+import * as S from "../style/Header";
+import axios from "axios";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("accessToken"));
+  }, []);
+
+  useEffect(() => {
+    console.log(token);
+    if (token !== "") {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [token]);
 
   const onLogo = () => {
     window.location.assign("/");

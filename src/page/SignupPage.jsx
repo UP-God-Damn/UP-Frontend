@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import * as S from "../css/Signup";
-import * as A from "../css/Signup_2";
+import * as S from "../style/Signup";
+import * as A from "../style/Signup_2";
 import axios from "axios";
 
 function SignupPage() {
@@ -18,37 +18,40 @@ function SignupPage() {
   const fileInput = document.querySelector("#fileInput");
 
   const formD = () => {
-    const request = {
-      nickname: signData.nickname,
-      accountId: signData.accountId,
-      password: signData.password,
-    };
-    formData.append(
-      "request",
-      new Blob([JSON.stringify(request)], { type: "application/json" })
-    );
-    if(fileInput)
-      formData.append("image", fileInput.files[0] | "");
-    server();
+    if (fileInput) formData.append("image", fileInput.files[0] | "");
+    serverFormData();
+  };
+
+  const serverFormData = () => {
+    const token = localStorage.getItem("accessToken");
+    axios
+      .post(
+        `http://13.209.66.252:8080/user/profile-image/${signData.accountId}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        alert("환영합니다.");
+        window.location.assign("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.image");
+      });
   };
 
   const server = () => {
-    let entries = formData.entries();
-    for (const pair of entries) {
-      console.log(pair[0] + ", " + pair[1]);
-    }
     axios
-      .request({
-        url: `http://13.209.66.252:8080/user/signup`,
-        method: "post",
-        data: formData,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .post(`http://13.209.66.252:8080/user/signup`, signData)
       .then((res) => {
-        alert("가입되었습니다.");
-        window.location.assign("/");
+        const { accessToken, refreshToken } = res.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        alert("확인되었습니다.");
       })
       .catch((err) => {
         console.log(err);
@@ -60,8 +63,12 @@ function SignupPage() {
     if (signData.nickname.length >= 2) {
       if (signData.accountId.length >= 6 && idCheck) {
         if (signData.password.length && signData.password === passwordCheck) {
-          alert("확인되었습니다.");
-          setPageNum(false);
+          if (window.confirm("가입하시겠습니까?")) {
+            server();
+            setPageNum(false);
+          } else {
+            alert("취소되었습니다.");
+          }
         } else {
           alert("비밀번호를 확인해주세요.");
         }
@@ -94,7 +101,7 @@ function SignupPage() {
   };
 
   const onCheck_page = () => {
-    if (window.confirm("가입하시겠습니까?")) {
+    if (window.confirm("등록하시겠습니까?")) {
       formD();
     } else {
       alert("취소되었습니다.");
@@ -185,7 +192,7 @@ function SignupPage() {
                   maxLength="20"
                 />
               </S.Label>
-              <S.signup_button onClick={onCheck}>다음으로</S.signup_button>
+              <S.signup_button onClick={onCheck}>가입하기</S.signup_button>
             </S.Label_div>
           </S.Body>
         </S.Background>
@@ -209,7 +216,7 @@ function SignupPage() {
             <A.font>
               프로필 이미지를 설정하지 않을 경우에는 기본 프로필로 설정됩니다.
             </A.font>
-            <A.signup_button onClick={onCheck_page}>가입하기</A.signup_button>
+            <A.signup_button onClick={onCheck_page}>등록하기</A.signup_button>
           </A.Body>
           <A.input
             type="file"

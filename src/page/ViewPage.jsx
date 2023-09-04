@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as S from "../css/View";
+import * as S from "../style/View";
 
 function ViewPage() {
   const [comment, setComment] = useState("");

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import * as S from "../css/Amend";
+import * as S from "../style/Amend";
 
 function AmendPage() {
   const [title, setTitle] = useState("");

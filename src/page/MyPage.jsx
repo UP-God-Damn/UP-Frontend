@@ -1,26 +1,56 @@
 import React, { useState, useEffect } from "react";
-import * as S from "../css/My";
+import * as S from "../style/My";
 import axios from "axios";
 
 function MyPage() {
   const [data, setData] = useState("");
-  const [imgData, setImgData] = useState(false);
+  const imgData = data.profileImgeUrl;
+  const token = localStorage.getItem("accessToken");
 
   useEffect(() => {
+    if (token !== "") {
+      onData();
+    }
+  }, []);
+
+  const onData = () => {
     axios
-      .get("http://13.209.66.252:8080/post/user?page=2&size=3")
+      .get(`http://13.209.66.252:8080/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
-        alert("res");
+        console.log(res.data);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);
         alert("에러가 발생했습니다.");
       });
-  }, []);
+  };
+
+  const onServer = () => {
+    axios
+      .delete(`http://13.209.66.252:8080/user/logout`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        window.localStorage.removeItem("accessToken");
+        window.localStorage.removeItem("refreshToken");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
 
   const onLogout = () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
-      axios.delete(`http://13.209.66.252:8080/user/logout`);
+      onServer();
       alert("로그아웃되었습니다.");
       window.location.assign("/");
     } else {
@@ -54,7 +84,7 @@ function MyPage() {
           </S.body_head>
           <S.body_top>
             <S.Img>
-              {imgData ? <img src="{data.profileImgeUrl}"></img> : <S.imgSrc />}
+              {imgData ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
             </S.Img>
             <S.label_div>
               <S.label>아이디</S.label>
@@ -73,19 +103,19 @@ function MyPage() {
             <S.check>
               <S.main>
                 <S.main_left onClick={onView}>
-                  <S.title>404 Not Found</S.title>
+                  <S.title>글 제목</S.title>
                   <S.information>
                     <S.information_div>
                       <S.PeopleIcon></S.PeopleIcon>
-                      <S.information_font>admin01</S.information_font>
+                      <S.information_font>아이디</S.information_font>
                     </S.information_div>
                     <S.information_div>
                       <S.CalenderIcon></S.CalenderIcon>
-                      <S.information_font>2023 / 07 /16</S.information_font>
+                      <S.information_font>날짜</S.information_font>
                     </S.information_div>
                     <S.information_div>
                       <S.langeIcon></S.langeIcon>
-                      <S.information_font>JAVA</S.information_font>
+                      <S.information_font>언어</S.information_font>
                     </S.information_div>
                   </S.information>
                   <S.tag_div>

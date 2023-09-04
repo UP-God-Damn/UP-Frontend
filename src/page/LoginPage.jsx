@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import * as S from "../css/Login";
+import * as S from "../style/Login";
 import axios from "axios";
 
 function LoginPage() {
@@ -28,10 +28,8 @@ function LoginPage() {
       })
       .then((res) => {
         const { accessToken, refreshToken } = res.data;
-
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-
         alert("환영합니다.");
         window.location.assign("/");
       })

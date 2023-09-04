@@ -1,25 +1,46 @@
 import React, { useState, useEffect } from "react";
-import * as S from "../css/Main";
+import * as S from "../style/Main";
 import axios from "axios";
 
 function MainPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
+  const imgData = data.profileImgeUrl;
+  const token = localStorage.getItem("accessToken");
+  const [data, setData] = useState("");
 
   useEffect(() => {
+    if (token !== "") {
+      onData();
+    }
+  }, []);
+
+  const Token = () => {
+    console.log(token);
+    if (token !== "") {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  };
+
+  const onData = () => {
     axios
-      .get(
-        "http://13.209.66.252:8080/post/search?title=&state=&major=&page=2&size=3"
-      )
+      .get(`http://13.209.66.252:8080/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
-        alert("res");
+        console.log(res.data);
+        setData(res.data);
       })
       .catch((err) => {
         console.log(err);
         alert("에러가 발생했습니다.");
       });
-  }, []);
+  };
 
   const onLogin = () => {
     window.location.assign("/login");
@@ -56,14 +77,10 @@ function MainPage() {
           <S.font>MY PAGE</S.font>
           <S.mypage_div onClick={onMypage}>
             <S.Div>
-              <S.Img></S.Img>
+              <S.Img src={data.profileImgeUrl}></S.Img>
               <S.login_id>admin</S.login_id>
             </S.Div>
             <S.loginImg></S.loginImg>
-          </S.mypage_div>
-          <S.mypage_div>
-            <S.login_label>전공</S.login_label>
-            <S.login_value>백엔드</S.login_value>
           </S.mypage_div>
           <S.login_div>
             <S.login_label>내 활동</S.login_label>
