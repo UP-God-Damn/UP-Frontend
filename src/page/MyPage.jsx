@@ -4,20 +4,18 @@ import axios from "axios";
 
 function MyPage() {
   const [data, setData] = useState("");
-  const imgData = data.profileImgeUrl;
-  const token = localStorage.getItem("accessToken");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    if (token !== "") {
-      onData();
-    }
+    setToken(localStorage.getItem("accessToken"));
+    onData();
   }, []);
 
   const onData = () => {
     axios
       .get(`http://13.209.66.252:8080/user`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -25,8 +23,8 @@ function MyPage() {
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        alert("에러가 발생했습니다. main");
       });
   };
 
@@ -84,7 +82,7 @@ function MyPage() {
           </S.body_head>
           <S.body_top>
             <S.Img>
-              {imgData ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
+              {data.profileImgUrl ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
             </S.Img>
             <S.label_div>
               <S.label>아이디</S.label>

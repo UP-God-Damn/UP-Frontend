@@ -5,6 +5,8 @@ import MainCalender from "../icons/MainCalender";
 import MainPeople from "../icons/MainPeople";
 import Mainlange from "../icons/Mainlange";
 
+import profile from "../icons/profile_main";
+
 export const Background = styled.div`
   background-color: #f0f0f0;
   width: 100%;
@@ -80,11 +82,13 @@ export const icon = styled(loginIcon)`
   height: 40px;
 `;
 
-export const Img = styled.img`
+export const Img = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
 `;
+
+export const imgSrc = styled(profile)``;
 
 export const login_font = styled.div`
   font-size: 16px;

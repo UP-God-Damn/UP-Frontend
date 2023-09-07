@@ -3,33 +3,21 @@ import * as S from "../style/Main";
 import axios from "axios";
 
 function MainPage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
-  const imgData = data.profileImgeUrl;
-  const token = localStorage.getItem("accessToken");
   const [data, setData] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    if (token !== "") {
-      onData();
-    }
+    setToken(localStorage.getItem("accessToken"));
+    onData();
   }, []);
-
-  const Token = () => {
-    console.log(token);
-    if (token !== "") {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  };
 
   const onData = () => {
     axios
       .get(`http://13.209.66.252:8080/user`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -37,8 +25,8 @@ function MainPage() {
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        alert("에러가 발생했습니다. main");
       });
   };
 
@@ -72,19 +60,21 @@ function MainPage() {
 
   return (
     <S.Background>
-      {isLoggedIn ? (
+      {token ? (
         <S.Mypage>
           <S.font>MY PAGE</S.font>
           <S.mypage_div onClick={onMypage}>
             <S.Div>
-              <S.Img src={data.profileImgeUrl}></S.Img>
-              <S.login_id>admin</S.login_id>
+              <S.Img>
+              {data.profileImgUrl ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
+              </S.Img>
+              <S.login_id>{data.accountId}</S.login_id>
             </S.Div>
             <S.loginImg></S.loginImg>
           </S.mypage_div>
           <S.login_div>
             <S.login_label>내 활동</S.login_label>
-            <S.login_value>작성글 74</S.login_value>
+            <S.login_value>작성글 {data.totalPosts}</S.login_value>
           </S.login_div>
         </S.Mypage>
       ) : (
@@ -99,7 +89,7 @@ function MainPage() {
           </S.login_div>
         </S.Login>
       )}
-      {isLoggedIn ? (
+      {token ? (
         <S.List_mypage>
           <S.list_border>게시글 목록</S.list_border>
           <S.li>해결한 ERROR 해결책</S.li>
@@ -132,7 +122,7 @@ function MainPage() {
           </S.li>
         </S.List_login>
       )}
-      {isLoggedIn ? (
+      {token ? (
         <S.create onClick={onMessage}>글 작성하기</S.create>
       ) : (
         <div></div>
@@ -154,25 +144,25 @@ function MainPage() {
             <S.Major_option value="기타">기타</S.Major_option>
           </S.Major>
         </S.border>
-        <S.main onClick={isLoggedIn ? onView : onComment}>
-          <S.title>404 Not Found</S.title>
+        <S.main onClick={token ? onView : onComment}>
+          <S.title>제목</S.title>
           <S.information>
             <S.information_div>
               <S.PeopleIcon></S.PeopleIcon>
-              <S.information_font>admin01</S.information_font>
+              <S.information_font>아이디</S.information_font>
             </S.information_div>
             <S.information_div>
               <S.CalenderIcon></S.CalenderIcon>
-              <S.information_font>2023 / 07 /16</S.information_font>
+              <S.information_font>날짜</S.information_font>
             </S.information_div>
             <S.information_div>
               <S.langeIcon></S.langeIcon>
-              <S.information_font>JAVA</S.information_font>
+              <S.information_font>언어</S.information_font>
             </S.information_div>
           </S.information>
           <S.tag_div>
             <S.tag>질문</S.tag>
-            <S.tag_major>백엔드</S.tag_major>
+            <S.tag_major>전공</S.tag_major>
           </S.tag_div>
         </S.main>
       </S.body>
