@@ -10,20 +10,87 @@ function CreatePage() {
     state: "",
     major: "",
   });
+  const [getData, setGetData] = useState("");
   const imageInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState([]);
   const formData = new FormData();
   const fileInput = document.querySelector("#fileInput");
+  const [token, setToken] = useState("");
+  const [idData, setIdData] = useState("");
+
+  useEffect(() => {
+    setToken(localStorage.getItem("accessToken"));
+    onData();
+  }, []);
+
+  const onData = () => {
+    axios
+      .get(`http://13.209.66.252:8080/user`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setGetData(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("에러가 발생했습니다. get");
+      });
+  };
 
   useEffect(() => {
     console.log(data);
   }, [data]);
 
   const formD = () => {
+    if (fileInput) {
+      formData.append("image", fileInput.files[0]);
+    } else {
+      formData.append("image", "");
+    }
     server();
+    serverFormData();
   };
 
   const server = () => {
+    const token = localStorage.getItem("accessToken");
+    axios
+      .post("http://13.209.66.252:8080/post", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setIdData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다. data");
+      });
+  };
+
+  const serverFormData = () => {
+    axios
+      .post(
+        `http://13.209.66.252:8080/post/postImage/${idData.id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        alert("등록되었습니다.");
+        window.location.assign("/");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다. image");
+      });
   };
 
   const handleChange = (e) => {

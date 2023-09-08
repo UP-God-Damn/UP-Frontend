@@ -6,12 +6,29 @@ function MainPage() {
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [data, setData] = useState("");
+  const [getPage, setGetPage] = useState([]);
   const [token, setToken] = useState("");
 
   useEffect(() => {
+    onGetPage();
     setToken(localStorage.getItem("accessToken"));
-    onData();
+    if(token !== "") {
+      onData();
+    }
   }, []);
+
+ const onGetPage = () => {
+  axios
+    .get(`http://13.209.66.252:8080/post/search?title=&state=&major=&page=0&size=5`)
+    .then((res) => {
+      console.log(res.data);
+      setGetPage(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+      alert("에러가 발생했습니다. getpage");
+    })
+ };
 
   const onData = () => {
     axios
@@ -68,7 +85,7 @@ function MainPage() {
               <S.Img>
               {data.profileImgUrl ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
               </S.Img>
-              <S.login_id>{data.accountId}</S.login_id>
+              <S.login_id>{data.nickname}</S.login_id>
             </S.Div>
             <S.loginImg></S.loginImg>
           </S.mypage_div>
@@ -131,40 +148,38 @@ function MainPage() {
         <S.border>
           <S.Major onChange={onMajorChange}>
             <S.Major_option value="">전공</S.Major_option>
-            <S.Major_option value="프론트엔드">프론트엔드</S.Major_option>
-            <S.Major_option value="백엔드">백엔드</S.Major_option>
-            <S.Major_option value="디자인">디자인</S.Major_option>
-            <S.Major_option value="임베디드">임베디드</S.Major_option>
-            <S.Major_option value="플러터">플러터</S.Major_option>
-            <S.Major_option value="정보보안">정보보안</S.Major_option>
-            <S.Major_option value="게임개발">게임개발</S.Major_option>
-            <S.Major_option value="AI">AI</S.Major_option>
+            <S.Major_option value="FRONTEND">프론트엔드</S.Major_option>
+            <S.Major_option value="BACKEND">백엔드</S.Major_option>
+            <S.Major_option value="EMBEDDED">임베디드</S.Major_option>
+            <S.Major_option value="FLUTTER">플러터</S.Major_option>
             <S.Major_option value="IOS">IOS</S.Major_option>
-            <S.Major_option value="안드로이드">안드로이드</S.Major_option>
-            <S.Major_option value="기타">기타</S.Major_option>
+            <S.Major_option value="ANDROID">안드로이드</S.Major_option>
+            <S.Major_option value="DEVOPS">DEVOPS</S.Major_option>
           </S.Major>
         </S.border>
-        <S.main onClick={token ? onView : onComment}>
-          <S.title>제목</S.title>
-          <S.information>
-            <S.information_div>
-              <S.PeopleIcon></S.PeopleIcon>
-              <S.information_font>아이디</S.information_font>
-            </S.information_div>
-            <S.information_div>
-              <S.CalenderIcon></S.CalenderIcon>
-              <S.information_font>날짜</S.information_font>
-            </S.information_div>
-            <S.information_div>
-              <S.langeIcon></S.langeIcon>
-              <S.information_font>언어</S.information_font>
-            </S.information_div>
-          </S.information>
-          <S.tag_div>
-            <S.tag>질문</S.tag>
-            <S.tag_major>전공</S.tag_major>
-          </S.tag_div>
-        </S.main>
+        {getPage.map((item, index) => (
+            <S.main onClick={token ? onView : onComment}>
+            <S.title>제목</S.title>
+            <S.information>
+              <S.information_div>
+                <S.PeopleIcon></S.PeopleIcon>
+                <S.information_font>아이디</S.information_font>
+              </S.information_div>
+              <S.information_div>
+                <S.CalenderIcon></S.CalenderIcon>
+                <S.information_font>날짜</S.information_font>
+              </S.information_div>
+              <S.information_div>
+                <S.langeIcon></S.langeIcon>
+                <S.information_font>언어</S.information_font>
+              </S.information_div>
+            </S.information>
+            <S.tag_div>
+              <S.tag>질문</S.tag>
+              <S.tag_major>전공</S.tag_major>
+            </S.tag_div>
+          </S.main>
+          ))}
       </S.body>
     </S.Background>
   );

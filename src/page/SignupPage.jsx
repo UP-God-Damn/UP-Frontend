@@ -18,7 +18,11 @@ function SignupPage() {
   const fileInput = document.querySelector("#fileInput");
 
   const formD = () => {
-    if (fileInput) formData.append("image", fileInput.files[0] | "");
+    if (fileInput) {
+      formData.append("image", fileInput.files[0]);
+    } else {
+      formData.append("image", "");
+    }
     serverFormData();
   };
 
@@ -26,7 +30,7 @@ function SignupPage() {
     const token = localStorage.getItem("accessToken");
     axios
       .post(
-        `http://13.209.66.252:8080/user/profile-image/${signData.accountId}`,
+        `http://13.209.66.252:8080/user/profileImage/${signData.accountId}`,
         formData,
         {
           headers: {
@@ -40,6 +44,7 @@ function SignupPage() {
       })
       .catch((err) => {
         console.log(err);
+        console.log("실패");
         alert("에러가 발생했습니다.image");
       });
   };
