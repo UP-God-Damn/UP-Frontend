@@ -3,6 +3,7 @@ import * as S from "../style/Create";
 import axios from "axios";
 
 function CreatePage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -25,7 +26,7 @@ function CreatePage() {
 
   const onData = () => {
     axios
-      .get(`http://13.209.66.252:8080/user`, {
+      .get(`${API_BASE_URL}/user`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -57,7 +58,7 @@ function CreatePage() {
   const server = () => {
     const token = localStorage.getItem("accessToken");
     axios
-      .post("http://13.209.66.252:8080/post", data, {
+      .post("${API_BASE_URL}/post", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -75,7 +76,7 @@ function CreatePage() {
   const serverFormData = () => {
     axios
       .post(
-        `http://13.209.66.252:8080/post/postImage/${idData.id}`,
+        `${API_BASE_URL}/post/postImage/${idData.id}`,
         formData,
         {
           headers: {

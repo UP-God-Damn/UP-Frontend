@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as S from "../style/View";
 
 function ViewPage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [comment, setComment] = useState("");
   const [del, setDel] = useState(false);
   const [re, setRe] = useState(false);

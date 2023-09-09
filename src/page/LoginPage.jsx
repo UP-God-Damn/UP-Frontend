@@ -3,6 +3,7 @@ import * as S from "../style/Login";
 import axios from "axios";
 
 function LoginPage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [signData, setSignData] = useState({
     accountId: "",
     password: "",
@@ -22,7 +23,7 @@ function LoginPage() {
 
   const onCheck = () => {
     axios
-      .post("http://13.209.66.252:8080/user/login", {
+      .post(`${API_BASE_URL}/user/login`, {
         accountId: signData.accountId,
         password: signData.password,
       })

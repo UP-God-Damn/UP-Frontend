@@ -17,11 +17,20 @@ export const Background = styled.div`
 
 export const body = styled.div`
   width: 888px;
-  height: 730px;
   background-color: white;
   border-radius: 20px;
   margin: 0px 363px 0px 669px;
   box-shadow: 4px 8px 10px gray;
+`;
+
+export const plus = styled.div`
+  margin: 10px 0px;
+  text-align: center; 
+  color: #191c1b;
+  font-size: 15px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Login = styled.div`
@@ -71,7 +80,7 @@ export const mypage_div = styled.div`
   align-items: center;
   margin: 15px 15px 0px 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #E1E2E3;
+  border-bottom: 1px solid #e1e2e3;
   &:hover {
     cursor: pointer;
   }

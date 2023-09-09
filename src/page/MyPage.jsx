@@ -3,17 +3,42 @@ import * as S from "../style/My";
 import axios from "axios";
 
 function MyPage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [data, setData] = useState("");
   const [token, setToken] = useState("");
+  const [pageNum, setPageNum] = useState(0);
+  const [responseData, setResponseData] = useState([]);
 
   useEffect(() => {
+    onGetPage();
     setToken(localStorage.getItem("accessToken"));
     onData();
   }, []);
 
+  useEffect(() => {
+    onGetPage();
+  }, [pageNum]);
+
+  const onGetPage = () => {
+    axios
+      .get(`${API_BASE_URL}/post/user?page=${pageNum}&size=4`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setResponseData(res.data.postResponses);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다. getpage");
+      });
+  };
+
   const onData = () => {
     axios
-      .get(`http://13.209.66.252:8080/user`, {
+      .get(`${API_BASE_URL}/user`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -30,7 +55,7 @@ function MyPage() {
 
   const onServer = () => {
     axios
-      .delete(`http://13.209.66.252:8080/user/logout`, {
+      .delete(`${API_BASE_URL}/user/logout`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -54,6 +79,10 @@ function MyPage() {
     } else {
       alert("취소되었습니다.");
     }
+  };
+
+  const onPlus = () => {
+    setPageNum(pageNum + 1);
   };
 
   const onView = () => {
@@ -82,7 +111,11 @@ function MyPage() {
           </S.body_head>
           <S.body_top>
             <S.Img>
-              {data.profileImgUrl ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
+              {data.profileImgUrl ? (
+                <img src={data.profileImgeUrl}></img>
+              ) : (
+                <S.imgSrc />
+              )}
             </S.Img>
             <S.label_div>
               <S.label>아이디</S.label>
@@ -99,39 +132,37 @@ function MyPage() {
               <S.line></S.line>
             </S.border>
             <S.check>
-              <S.main>
-                <S.main_left onClick={onView}>
-                  <S.title>글 제목</S.title>
-                  <S.information>
-                    <S.information_div>
-                      <S.PeopleIcon></S.PeopleIcon>
-                      <S.information_font>아이디</S.information_font>
-                    </S.information_div>
-                    <S.information_div>
-                      <S.CalenderIcon></S.CalenderIcon>
-                      <S.information_font>날짜</S.information_font>
-                    </S.information_div>
-                    <S.information_div>
-                      <S.langeIcon></S.langeIcon>
-                      <S.information_font>언어</S.information_font>
-                    </S.information_div>
-                  </S.information>
-                  <S.tag_div>
-                    <S.tag>질문</S.tag>
-                    <S.tag_major>백엔드</S.tag_major>
-                  </S.tag_div>
-                </S.main_left>
-                <S.main_right>
-                  <S.button onClick={onAmend}>수정</S.button>
-                  <S.button onClick={onDel}>삭제</S.button>
-                </S.main_right>
-              </S.main>
+              {responseData.map((post) => (
+                <S.main>
+                  <S.main_left onClick={onView}>
+                    <S.title>{post.title}</S.title>
+                    <S.information>
+                      <S.information_div>
+                        <S.PeopleIcon></S.PeopleIcon>
+                        <S.information_font>{post.userNickname}</S.information_font>
+                      </S.information_div>
+                      <S.information_div>
+                        <S.CalenderIcon></S.CalenderIcon>
+                        <S.information_font>{post.createDate}</S.information_font>
+                      </S.information_div>
+                      <S.information_div>
+                        <S.langeIcon></S.langeIcon>
+                        <S.information_font>{post.language}</S.information_font>
+                      </S.information_div>
+                    </S.information>
+                    <S.tag_div>
+                      <S.tag>{post.state}</S.tag>
+                      <S.tag_major>{post.major}</S.tag_major>
+                    </S.tag_div>
+                  </S.main_left>
+                  <S.main_right>
+                    <S.button onClick={onAmend}>수정</S.button>
+                    <S.button onClick={onDel}>삭제</S.button>
+                  </S.main_right>
+                </S.main>
+              ))}
             </S.check>
-            <S.list_div>
-              <S.list>1</S.list>
-              <S.list>2</S.list>
-              <S.list>3</S.list>
-            </S.list_div>
+            <S.plus onClick={onPlus}>더보기</S.plus>
           </S.body_bottom>
         </S.body>
       </S.Background>

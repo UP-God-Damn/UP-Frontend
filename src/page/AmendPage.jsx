@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import * as S from "../style/Amend";
 
 function AmendPage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [title, setTitle] = useState("");
   const [main, setMain] = useState("");
   const [langu, setLangu] = useState("");

@@ -3,36 +3,73 @@ import * as S from "../style/Main";
 import axios from "axios";
 
 function MainPage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [data, setData] = useState("");
-  const [getPage, setGetPage] = useState([]);
   const [token, setToken] = useState("");
+  const [responseData, setResponseData] = useState([]);
+  const [pageNum, setPageNum] = useState(0);
 
   useEffect(() => {
-    onGetPage();
+    console.log(major);
+    console.log(selectedTag);
+    console.log(pageNum);
+    if (major !== "" || selectedTag !== "") {
+      console.log("실행");
+      onGetSearch();
+    } else {
+      onGetPage();
+    }
+  }, [selectedTag, major, pageNum]);
+
+  useEffect(() => {
+    const titleSearch = localStorage.getItem("search");
     setToken(localStorage.getItem("accessToken"));
-    if(token !== "") {
+    if (titleSearch) {
+      onGetSearch();
+    } else {
+      onGetPage();
+    }
+    if (token !== "") {
       onData();
     }
   }, []);
 
- const onGetPage = () => {
-  axios
-    .get(`http://13.209.66.252:8080/post/search?title=&state=&major=&page=0&size=5`)
-    .then((res) => {
-      console.log(res.data);
-      setGetPage(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-      alert("에러가 발생했습니다. getpage");
-    })
- };
+  const onGetSearch = () => {
+    const titleSearch = localStorage.getItem("search");
+    axios
+      .get(
+        `${API_BASE_URL}/post/search?title=${titleSearch}&state=${selectedTag}&major=${major}&page=${pageNum}&size=10`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setResponseData(res.data.postResponses);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다. getsearch");
+      });
+  };
+
+  const onGetPage = () => {
+    axios
+      .get(
+        `${API_BASE_URL}/post/search?title=&state=&major=&page=${pageNum}&size=10`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setResponseData(res.data.postResponses);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다. getpage");
+      });
+  };
 
   const onData = () => {
     axios
-      .get(`http://13.209.66.252:8080/user`, {
+      .get(`${API_BASE_URL}/user`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
@@ -43,8 +80,12 @@ function MainPage() {
       })
       .catch((err) => {
         console.error(err);
-        alert("에러가 발생했습니다. main");
+        alert("에러가 발생했습니다. data");
       });
+  };
+
+  const onPlus = () => {
+    setPageNum(pageNum + 1);
   };
 
   const onLogin = () => {
@@ -71,8 +112,8 @@ function MainPage() {
     setMajor(event.target.value);
   };
 
-  const handleTagSelect = (major) => {
-    setSelectedTag(major);
+  const handleTagSelect = (tag) => {
+    setSelectedTag(tag);
   };
 
   return (
@@ -83,7 +124,11 @@ function MainPage() {
           <S.mypage_div onClick={onMypage}>
             <S.Div>
               <S.Img>
-              {data.profileImgUrl ? <img src={data.profileImgeUrl}></img> : <S.imgSrc />}
+                {data.profileImgUrl ? (
+                  <img src={data.profileImgeUrl}></img>
+                ) : (
+                  <S.imgSrc />
+                )}
               </S.Img>
               <S.login_id>{data.nickname}</S.login_id>
             </S.Div>
@@ -109,34 +154,34 @@ function MainPage() {
       {token ? (
         <S.List_mypage>
           <S.list_border>게시글 목록</S.list_border>
-          <S.li>해결한 ERROR 해결책</S.li>
-          <S.li>해결하지 못한 ERROR 질문</S.li>
-        </S.List_mypage>
-      ) : (
-        <S.List_login>
-          <S.list_border>게시글 목록</S.list_border>
           <S.li
             style={{
-              color: selectedTag === "해결" ? "#191c1b" : "#767676",
-              fontWeight: selectedTag === "해결" ? "bold" : "regular",
-              textDecoration: selectedTag === "해결" ? "underline" : "none",
+              color: selectedTag === "SOLUTION" ? "#191c1b" : "#767676",
+              fontWeight: selectedTag === "SOLUTION" ? "bold" : "regular",
+              textDecoration: selectedTag === "SOLUTION" ? "underline" : "none",
             }}
-            active={selectedTag === "해결"}
-            onClick={() => handleTagSelect("해결")}
+            active={selectedTag === "SOLUTION"}
+            onClick={() => handleTagSelect("SOLUTION")}
           >
             해결한 ERROR 해결책
           </S.li>
           <S.li
             style={{
-              color: selectedTag === "질문" ? "#191c1b" : "#767676",
-              fontWeight: selectedTag === "질문" ? "bold" : "regular",
-              textDecoration: selectedTag === "질문" ? "underline" : "none",
+              color: selectedTag === "QUESTION" ? "#191c1b" : "#767676",
+              fontWeight: selectedTag === "QUESTION" ? "bold" : "regular",
+              textDecoration: selectedTag === "QUESTION" ? "underline" : "none",
             }}
-            active={selectedTag === "질문"}
-            onClick={() => handleTagSelect("질문")}
+            active={selectedTag === "QUESTION"}
+            onClick={() => handleTagSelect("QUESTION")}
           >
             해결하지 못한 ERROR 질문
           </S.li>
+        </S.List_mypage>
+      ) : (
+        <S.List_login>
+          <S.list_border>게시글 목록</S.list_border>
+          <S.li>해결한 ERROR 해결책</S.li>
+          <S.li>해결하지 못한 ERROR 질문</S.li>
         </S.List_login>
       )}
       {token ? (
@@ -157,29 +202,30 @@ function MainPage() {
             <S.Major_option value="DEVOPS">DEVOPS</S.Major_option>
           </S.Major>
         </S.border>
-        {getPage.map((item, index) => (
-            <S.main onClick={token ? onView : onComment}>
-            <S.title>제목</S.title>
+        {responseData.map((post) => (
+          <S.main onClick={token ? onView : onComment}>
+            <S.title>{post.title}</S.title>
             <S.information>
               <S.information_div>
                 <S.PeopleIcon></S.PeopleIcon>
-                <S.information_font>아이디</S.information_font>
+                <S.information_font>{post.userNickname}</S.information_font>
               </S.information_div>
               <S.information_div>
                 <S.CalenderIcon></S.CalenderIcon>
-                <S.information_font>날짜</S.information_font>
+                <S.information_font>{post.createDate}</S.information_font>
               </S.information_div>
               <S.information_div>
                 <S.langeIcon></S.langeIcon>
-                <S.information_font>언어</S.information_font>
+                <S.information_font>{post.language}</S.information_font>
               </S.information_div>
             </S.information>
             <S.tag_div>
-              <S.tag>질문</S.tag>
-              <S.tag_major>전공</S.tag_major>
+              <S.tag>{post.state}</S.tag>
+              <S.tag_major>{post.major}</S.tag_major>
             </S.tag_div>
           </S.main>
-          ))}
+        ))}
+        <S.plus onClick={onPlus}>더보기</S.plus>
       </S.body>
     </S.Background>
   );

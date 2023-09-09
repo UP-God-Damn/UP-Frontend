@@ -105,6 +105,7 @@ export const check = styled.div`
   margin: 10px 100px;
   width: 990px;
   align-items: center;
+  flex-direction: column;
 `;
 
 export const button = styled.button`
@@ -126,7 +127,7 @@ export const main = styled.div`
   width: 1050px;
   height: 85px;
   border-bottom: 1px solid #e1e2e3;
-  padding: 20px 40px;
+  padding: 15px 40px;
   display: flex;
   justify-content: space-between;
 `;
@@ -212,17 +213,12 @@ export const tag_major = styled.div`
   padding: 0px 15px;
 `;
 
-export const list_div = styled.div`
-  position: fixed;
-  margin: 550px 0px 0px 550px;
-  display: flex;
-`;
-
-export const list = styled.div`
-  margin: 0px 5px;
-  color: #767676;
+export const plus = styled.div`
+  margin: 10px 0px;
+  text-align: center; 
+  color: #191c1b;
+  font-size: 15px;
   &:hover {
-    font-weight: bold;
     cursor: pointer;
   }
 `;

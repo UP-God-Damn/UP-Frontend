@@ -4,6 +4,7 @@ import * as A from "../style/Signup_2";
 import axios from "axios";
 
 function SignupPage() {
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const imageInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
   const [pageNum, setPageNum] = useState(true);
@@ -30,7 +31,7 @@ function SignupPage() {
     const token = localStorage.getItem("accessToken");
     axios
       .post(
-        `http://13.209.66.252:8080/user/profileImage/${signData.accountId}`,
+        `${API_BASE_URL}/user/profileImage/${signData.accountId}`,
         formData,
         {
           headers: {
@@ -51,7 +52,7 @@ function SignupPage() {
 
   const server = () => {
     axios
-      .post(`http://13.209.66.252:8080/user/signup`, signData)
+      .post(`${API_BASE_URL}/user/signup`, signData)
       .then((res) => {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
@@ -115,7 +116,7 @@ function SignupPage() {
 
   const onDoublecheck = () => {
     axios
-      .get(`http://13.209.66.252:8080/user/${signData.accountId}`)
+      .get(`${API_BASE_URL}/user/${signData.accountId}`)
       .then((res) => {
         setIdCheck(true);
         alert("사용 가능한 아이디입니다.");
