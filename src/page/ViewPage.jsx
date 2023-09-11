@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as S from "../style/View";
+import axios from "axios";
 
 function ViewPage() {
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+  // const API_BASE_URL = process.env.REACT_APP_API_URL;
+  const API_BASE_URL = "http://13.209.66.252:8080";
   const [comment, setComment] = useState("");
   const [del, setDel] = useState(false);
   const [re, setRe] = useState(false);
   const [commentView, setCommentView] = useState(false);
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    onData();
+  }, []);
+
+  const onData = () => {
+    const id = localStorage.getItem("id");
+    axios
+      .get(`${API_BASE_URL}/post/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
 
   const commentPlus = () => {
     if (comment.length >= 5) {
@@ -20,7 +45,6 @@ function ViewPage() {
     }
   };
 
-  
   const onCommentV = () => {
     setCommentView(true);
   };
@@ -59,27 +83,27 @@ function ViewPage() {
     <S.Background>
       <S.Body>
         <S.title_div>
-          <S.title>404 Not Found</S.title>
+          <S.title>{data.title}</S.title>
         </S.title_div>
         <S.title_div>
           <S.information>
             <S.information_div>
-              <S.PeopleIcon></S.PeopleIcon>
-              <S.information_font>admin01</S.information_font>
+              <S.PeopleIcon src="profileImage"></S.PeopleIcon>
+              <S.information_font>{data.userNickname}</S.information_font>
             </S.information_div>
             <S.information_div>
               <S.CalenderIcon></S.CalenderIcon>
-              <S.information_font>2023 / 07 /16</S.information_font>
+              <S.information_font>{data.createDate}</S.information_font>
             </S.information_div>
             <S.information_div>
               <S.langeIcon></S.langeIcon>
-              <S.information_font>JAVA</S.information_font>
+              <S.information_font>{data.language}</S.information_font>
             </S.information_div>
           </S.information>
-          <S.tag>질문</S.tag>
+          <S.tag>{data.state}</S.tag>
         </S.title_div>
         <S.body_main>
-          <S.main_text>글 내용</S.main_text>
+          <S.main_text>{data.content}</S.main_text>
           <S.comment_div>
             <S.comment
               maxlength="5000"

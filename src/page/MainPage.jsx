@@ -3,7 +3,8 @@ import * as S from "../style/Main";
 import axios from "axios";
 
 function MainPage() {
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+    // const API_BASE_URL = process.env.REACT_APP_API_URL;
+  const API_BASE_URL = "http://13.209.66.252:8080";
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
   const [data, setData] = useState("");
@@ -24,6 +25,9 @@ function MainPage() {
   }, [selectedTag, major, pageNum]);
 
   useEffect(() => {
+    window.onbeforeunload = function pushRefresh() {
+      window.scrollTo(0, 0);
+    };
     const titleSearch = localStorage.getItem("search");
     setToken(localStorage.getItem("accessToken"));
     if (titleSearch) {
@@ -48,7 +52,7 @@ function MainPage() {
       })
       .catch((err) => {
         console.log(err);
-        alert("에러가 발생했습니다. getsearch");
+        alert("에러가 발생했습니다.");
       });
   };
 
@@ -63,7 +67,7 @@ function MainPage() {
       })
       .catch((err) => {
         console.log(err);
-        alert("에러가 발생했습니다. getpage");
+        alert("에러가 발생했습니다.");
       });
   };
 
@@ -80,7 +84,7 @@ function MainPage() {
       })
       .catch((err) => {
         console.error(err);
-        alert("에러가 발생했습니다. data");
+        alert("에러가 발생했습니다.");
       });
   };
 
@@ -130,7 +134,7 @@ function MainPage() {
                   <S.imgSrc />
                 )}
               </S.Img>
-              <S.login_id>{data.nickname}</S.login_id>
+              <S.login_id>{data.accountId}</S.login_id>
             </S.Div>
             <S.loginImg></S.loginImg>
           </S.mypage_div>

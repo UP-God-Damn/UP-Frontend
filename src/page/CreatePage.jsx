@@ -3,7 +3,8 @@ import * as S from "../style/Create";
 import axios from "axios";
 
 function CreatePage() {
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+    // const API_BASE_URL = process.env.REACT_APP_API_URL;
+  const API_BASE_URL = "http://13.209.66.252:8080";
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -11,7 +12,6 @@ function CreatePage() {
     state: "",
     major: "",
   });
-  const [getData, setGetData] = useState("");
   const imageInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState([]);
   const formData = new FormData();
@@ -21,25 +21,7 @@ function CreatePage() {
 
   useEffect(() => {
     setToken(localStorage.getItem("accessToken"));
-    onData();
   }, []);
-
-  const onData = () => {
-    axios
-      .get(`${API_BASE_URL}/user`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setGetData(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("에러가 발생했습니다. get");
-      });
-  };
 
   useEffect(() => {
     console.log(data);
@@ -58,7 +40,7 @@ function CreatePage() {
   const server = () => {
     const token = localStorage.getItem("accessToken");
     axios
-      .post("${API_BASE_URL}/post", data, {
+      .post(`${API_BASE_URL}/post`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -69,7 +51,7 @@ function CreatePage() {
       })
       .catch((err) => {
         console.log(err);
-        alert("에러가 발생했습니다. data");
+        alert("에러가 발생했습니다.");
       });
   };
 
@@ -90,7 +72,7 @@ function CreatePage() {
       })
       .catch((err) => {
         console.log(err);
-        alert("에러가 발생했습니다. image");
+        alert("에러가 발생했습니다.");
       });
   };
 

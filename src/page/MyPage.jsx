@@ -3,7 +3,8 @@ import * as S from "../style/My";
 import axios from "axios";
 
 function MyPage() {
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+  // const API_BASE_URL = process.env.REACT_APP_API_URL;
+  const API_BASE_URL = "http://13.209.66.252:8080";
   const [data, setData] = useState("");
   const [token, setToken] = useState("");
   const [pageNum, setPageNum] = useState(0);
@@ -32,7 +33,24 @@ function MyPage() {
       })
       .catch((err) => {
         console.log(err);
-        alert("에러가 발생했습니다. getpage");
+        alert("에러가 발생했습니다.");
+      });
+  };
+
+  const onDelete = () => {
+    const id = localStorage.getItem("id");
+    axios
+      .delete(`${API_BASE_URL}/post/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        alert("삭제되었습니다.");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
       });
   };
 
@@ -49,7 +67,7 @@ function MyPage() {
       })
       .catch((err) => {
         console.error(err);
-        alert("에러가 발생했습니다. main");
+        alert("에러가 발생했습니다.");
       });
   };
 
@@ -95,7 +113,7 @@ function MyPage() {
 
   const onDel = () => {
     if (window.confirm("삭제하시겠습니까?")) {
-      alert("삭제되었습니다.");
+      onDelete();
     } else {
       alert("취소되었습니다.");
     }
@@ -139,11 +157,15 @@ function MyPage() {
                     <S.information>
                       <S.information_div>
                         <S.PeopleIcon></S.PeopleIcon>
-                        <S.information_font>{post.userNickname}</S.information_font>
+                        <S.information_font>
+                          {post.userNickname}
+                        </S.information_font>
                       </S.information_div>
                       <S.information_div>
                         <S.CalenderIcon></S.CalenderIcon>
-                        <S.information_font>{post.createDate}</S.information_font>
+                        <S.information_font>
+                          {post.createDate}
+                        </S.information_font>
                       </S.information_div>
                       <S.information_div>
                         <S.langeIcon></S.langeIcon>

@@ -70,7 +70,7 @@ export const CalenderIcon = styled(MainCalender)`
   height: 15px;
 `;
 
-export const PeopleIcon = styled.div`
+export const PeopleIcon = styled.img`
   width: 20px;
   height: 20px;
   background-color: black;

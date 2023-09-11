@@ -212,6 +212,17 @@ export const Img_label = styled.label`
   margin-bottom: 5px;
 `;
 
+export const Img_div = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const Img_input = styled.img`
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+`;
+
 export const Img = styled.div`
   width: 200px;
   height: 200px;
