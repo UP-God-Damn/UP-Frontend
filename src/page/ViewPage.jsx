@@ -3,8 +3,7 @@ import * as S from "../style/View";
 import axios from "axios";
 
 function ViewPage() {
-  // const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const API_BASE_URL = "http://13.209.66.252:8080";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [comment, setComment] = useState("");
   const [del, setDel] = useState(false);
   const [re, setRe] = useState(false);
@@ -28,8 +27,14 @@ function ViewPage() {
         setData(res.data);
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 

@@ -3,8 +3,7 @@ import * as S from "../style/Amend";
 import axios from "axios";
 
 function AmendPage() {
-  // const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const API_BASE_URL = "http://13.209.66.252:8080";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -17,26 +16,36 @@ function AmendPage() {
   const [imgSrc, setImgSrc] = useState([]);
 
   useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  useEffect(() => {
     onData();
   }, []);
 
-  // const onPatch = () => {
-  //   const id = localStorage.getItem("id");
-  //   axios
-  //     .patch(`${API_BASE_URL}/post/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       setGetData(res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       alert("에러가 발생했습니다.");
-  //     });
-  // };
+  const onPatch = () => {
+    const id = localStorage.getItem("id");
+    axios
+      .patch(`${API_BASE_URL}/post/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        alert("수정되었습니다.");
+        window.location.assign("/");
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
+      });
+  };
 
   const onData = () => {
     const id = localStorage.getItem("id");
@@ -77,8 +86,7 @@ function AmendPage() {
       if (data.content.length >= 20) {
         if (data.language !== "") {
           if (window.confirm("수정하시겠습니까?")) {
-            alert("수정되었습니다.");
-            window.location.assign("/");
+            onPatch();
           } else {
             alert("취소되었습니다.");
           }
@@ -139,7 +147,7 @@ function AmendPage() {
           </S.language>
           <S.major>
             <S.major_label>전공</S.major_label>
-            <S.major_select onChange={onChange}>
+            <S.major_select onChange={onChange} id="major" name="major">
               <S.major_option
                 value="FRONTEND"
                 selected={getData.major === "프론트엔드" ? "selected" : ""}
@@ -186,7 +194,7 @@ function AmendPage() {
           </S.major>
           <S.tag>
             <S.tag_label>분류</S.tag_label>
-            <S.tag_select onChange={onChange}>
+            <S.tag_select onChange={onChange} id="state" name="state">
               <S.tag_option
                 value="해결"
                 selected={getData.state === "해결" ? "selected" : ""}

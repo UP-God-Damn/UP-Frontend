@@ -3,11 +3,10 @@ import * as S from "../style/Main";
 import axios from "axios";
 
 function MainPage() {
-    // const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const API_BASE_URL = "http://13.209.66.252:8080";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [major, setMajor] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
-  const [data, setData] = useState("");
+  const [data, setData] = useState({});
   const [token, setToken] = useState("");
   const [responseData, setResponseData] = useState([]);
   const [pageNum, setPageNum] = useState(0);
@@ -25,9 +24,6 @@ function MainPage() {
   }, [selectedTag, major, pageNum]);
 
   useEffect(() => {
-    window.onbeforeunload = function pushRefresh() {
-      window.scrollTo(0, 0);
-    };
     const titleSearch = localStorage.getItem("search");
     setToken(localStorage.getItem("accessToken"));
     if (titleSearch) {
@@ -38,6 +34,9 @@ function MainPage() {
     if (token !== "") {
       onData();
     }
+    window.onbeforeunload = function pushRefresh() {
+      window.scrollTo(0, 0);
+    };
   }, []);
 
   const onGetSearch = () => {
@@ -79,12 +78,17 @@ function MainPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
         console.error(err);
-        alert("에러가 발생했습니다.");
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 
@@ -134,7 +138,7 @@ function MainPage() {
                   <S.imgSrc />
                 )}
               </S.Img>
-              <S.login_id>{data.accountId}</S.login_id>
+              <S.login_id>{data.nickname}</S.login_id>
             </S.Div>
             <S.loginImg></S.loginImg>
           </S.mypage_div>

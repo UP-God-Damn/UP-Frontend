@@ -3,8 +3,7 @@ import * as S from "../style/Create";
 import axios from "axios";
 
 function CreatePage() {
-    // const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const API_BASE_URL = "http://13.209.66.252:8080";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [data, setData] = useState({
     title: "",
     content: "",
@@ -50,29 +49,37 @@ function CreatePage() {
         setIdData(res.data);
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 
   const serverFormData = () => {
     axios
-      .post(
-        `${API_BASE_URL}/post/postImage/${idData.id}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .post(`${API_BASE_URL}/post/postImage/${idData.id}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
         alert("등록되었습니다.");
         window.location.assign("/");
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 

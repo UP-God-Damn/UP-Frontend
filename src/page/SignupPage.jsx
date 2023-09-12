@@ -4,8 +4,7 @@ import * as A from "../style/Signup_2";
 import axios from "axios";
 
 function SignupPage() {
-    // const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const API_BASE_URL = "http://13.209.66.252:8080";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const imageInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
   const [pageNum, setPageNum] = useState(true);

@@ -3,8 +3,7 @@ import * as S from "../style/My";
 import axios from "axios";
 
 function MyPage() {
-  // const API_BASE_URL = process.env.REACT_APP_API_URL;
-  const API_BASE_URL = "http://13.209.66.252:8080";
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [data, setData] = useState("");
   const [token, setToken] = useState("");
   const [pageNum, setPageNum] = useState(0);
@@ -32,8 +31,14 @@ function MyPage() {
         setResponseData(res.data.postResponses);
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 
@@ -49,8 +54,14 @@ function MyPage() {
         alert("삭제되었습니다.");
       })
       .catch((err) => {
-        console.log(err);
-        alert("에러가 발생했습니다.");
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 
@@ -67,7 +78,13 @@ function MyPage() {
       })
       .catch((err) => {
         console.error(err);
-        alert("에러가 발생했습니다.");
+        if (err.response && err.response.status === 401) {
+          alert("만료된 토큰입니다.");
+          window.localStorage.removeItem("accessToken");
+          window.localStorage.removeItem("refreshToken");
+        } else {
+          alert("에러가 발생했습니다.");
+        }
       });
   };
 
