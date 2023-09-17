@@ -40,12 +40,11 @@ function SignupPage() {
         }
       )
       .then((res) => {
-        alert("환영합니다.");
+        alert(`환영합니다.`);
         window.location.assign("/");
       })
       .catch((err) => {
         console.log(err);
-        console.log("실패");
         alert("에러가 발생했습니다.");
       });
   };
@@ -97,10 +96,6 @@ function SignupPage() {
   const onPass = (input) => {
     setPasswordCheck(input.target.value);
   };
-
-  useEffect(() => {
-    console.log(signData);
-  }, [signData]);
 
   const handleImageClick = () => {
     imageInputRef.current.click();

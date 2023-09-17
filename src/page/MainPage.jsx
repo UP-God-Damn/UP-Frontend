@@ -12,11 +12,7 @@ function MainPage() {
   const [pageNum, setPageNum] = useState(0);
 
   useEffect(() => {
-    console.log(major);
-    console.log(selectedTag);
-    console.log(pageNum);
     if (major !== "" || selectedTag !== "") {
-      console.log("실행");
       onGetSearch();
     } else {
       onGetPage();
@@ -46,7 +42,6 @@ function MainPage() {
         `${API_BASE_URL}/post/search?title=${titleSearch}&state=${selectedTag}&major=${major}&page=${pageNum}&size=10`
       )
       .then((res) => {
-        console.log(res.data);
         setResponseData(res.data.postResponses);
       })
       .catch((err) => {
@@ -61,8 +56,8 @@ function MainPage() {
         `${API_BASE_URL}/post/search?title=&state=&major=&page=${pageNum}&size=10`
       )
       .then((res) => {
-        console.log(res.data);
         setResponseData(res.data.postResponses);
+        console.log(res.data.postResponses);
       })
       .catch((err) => {
         console.log(err);
@@ -84,8 +79,7 @@ function MainPage() {
         console.error(err);
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
+          localStorage.removeItem("accessToken");
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -108,7 +102,9 @@ function MainPage() {
     window.location.assign("/create");
   };
 
-  const onView = () => {
+  const onView = (e) => {
+    const postId = e.currentTarget.getAttribute("name");
+    localStorage.setItem("id", postId);
     window.location.assign("/view");
   };
 
@@ -132,11 +128,7 @@ function MainPage() {
           <S.mypage_div onClick={onMypage}>
             <S.Div>
               <S.Img>
-                {data.profileImgUrl ? (
-                  <img src={data.profileImgeUrl}></img>
-                ) : (
-                  <S.imgSrc />
-                )}
+                  <S.imgSrc src={data.profileImgeUrl}/>
               </S.Img>
               <S.login_id>{data.nickname}</S.login_id>
             </S.Div>
@@ -211,7 +203,7 @@ function MainPage() {
           </S.Major>
         </S.border>
         {responseData.map((post) => (
-          <S.main onClick={token ? onView : onComment}>
+          <S.main onClick={token ? onView : onComment} name={post.id}>
             <S.title>{post.title}</S.title>
             <S.information>
               <S.information_div>

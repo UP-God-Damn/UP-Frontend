@@ -97,7 +97,11 @@ export const Img = styled.div`
   border-radius: 50%;
 `;
 
-export const imgSrc = styled(profile)``;
+export const imgSrc = styled.img`
+  width:40px;
+  height:40px;
+  border-radius: 50%;
+`;
 
 export const login_font = styled.div`
   font-size: 16px;

@@ -20,6 +20,10 @@ function AmendPage() {
   }, [data]);
 
   useEffect(() => {
+    console.log(getData);
+  }, [getData]);
+
+  useEffect(() => {
     onData();
   }, []);
 
@@ -40,7 +44,6 @@ function AmendPage() {
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
           window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -58,6 +61,7 @@ function AmendPage() {
       .then((res) => {
         console.log(res.data);
         setGetData(res.data);
+        onImg();
       })
       .catch((err) => {
         console.log(err);
@@ -77,11 +81,18 @@ function AmendPage() {
     };
   };
 
+  const onImg = () => {
+    if (getData.file) {
+      setImgSrc(getData.file);
+    }
+  };
+
   const handleImageClick = () => {
     imageInputRef.current.click();
   };
 
   const onRemove = () => {
+    onCheck();
     if (data.title.length >= 3) {
       if (data.content.length >= 20) {
         if (data.language !== "") {
@@ -99,6 +110,25 @@ function AmendPage() {
     } else {
       alert("제목을 확인해주세요.");
     }
+  };
+
+  const onCheck = (e) => {
+    if (!data.title) {
+      data.title = getData.title;
+    }
+    if (!data.content) {
+      data.content = getData.content;
+    }
+    if (!data.language) {
+      data.language = getData.language;
+    }
+    if (!data.state) {
+      data.state = getData.state;
+    }
+    if (!data.major) {
+      data.major = getData.major;
+    }
+    console.log(data);
   };
 
   const onChange = (e) => {

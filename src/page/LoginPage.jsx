@@ -17,10 +17,6 @@ function LoginPage() {
     });
   };
 
-  useEffect(() => {
-    console.log(signData);
-  }, [signData]);
-
   const onCheck = () => {
     axios
       .post(`${API_BASE_URL}/user/login`, {
@@ -31,7 +27,7 @@ function LoginPage() {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
-        alert("환영합니다.");
+        alert(`환영합니다.`);
         window.location.assign("/");
       })
       .catch((err) => {

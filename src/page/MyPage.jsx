@@ -27,7 +27,6 @@ function MyPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setResponseData(res.data.postResponses);
       })
       .catch((err) => {
@@ -35,7 +34,6 @@ function MyPage() {
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
           window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -58,7 +56,6 @@ function MyPage() {
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
           window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -73,7 +70,6 @@ function MyPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
@@ -81,7 +77,6 @@ function MyPage() {
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
           window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -96,9 +91,7 @@ function MyPage() {
         },
       })
       .then((res) => {
-        console.log(res);
         window.localStorage.removeItem("accessToken");
-        window.localStorage.removeItem("refreshToken");
       })
       .catch((err) => {
         console.log(err);
@@ -124,7 +117,9 @@ function MyPage() {
     window.location.assign("/view");
   };
 
-  const onAmend = () => {
+  const onAmend = (e) => {
+    const postId = e.currentTarget.getAttribute("name");
+    localStorage.setItem("id", postId);
     window.location.assign("/amend");
   };
 
@@ -195,7 +190,7 @@ function MyPage() {
                     </S.tag_div>
                   </S.main_left>
                   <S.main_right>
-                    <S.button onClick={onAmend}>수정</S.button>
+                    <S.button onClick={onAmend} name={post.id}>수정</S.button>
                     <S.button onClick={onDel}>삭제</S.button>
                   </S.main_right>
                 </S.main>

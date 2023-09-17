@@ -12,28 +12,20 @@ function CreatePage() {
     major: "",
   });
   const imageInputRef = useRef(null);
-  const [imgSrc, setImgSrc] = useState([]);
+  const [imgSrc, setImgSrc] = useState("");
   const formData = new FormData();
-  const fileInput = document.querySelector("#fileInput");
-  const [token, setToken] = useState("");
   const [idData, setIdData] = useState("");
 
-  useEffect(() => {
-    setToken(localStorage.getItem("accessToken"));
-  }, []);
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const formD = () => {
-    if (fileInput) {
-      formData.append("image", fileInput.files[0]);
+    if (imageInputRef.current && imageInputRef.current.files[0]) {
+      formData.append("image", imageInputRef.current.files[0]);
     } else {
       formData.append("image", "");
     }
+    for (let key of formData.keys()) {
+      console.log(key, ":", formData.get(key));
+    }
     server();
-    serverFormData();
   };
 
   const server = () => {
@@ -45,7 +37,6 @@ function CreatePage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         setIdData(res.data);
       })
       .catch((err) => {
@@ -53,14 +44,20 @@ function CreatePage() {
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
           window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
         } else {
           alert("에러가 발생했습니다.");
         }
       });
   };
 
+  useEffect(() => {
+    if (idData !== "") {
+      serverFormData();
+    }
+  }, [idData]);
+
   const serverFormData = () => {
+    const token = localStorage.getItem("accessToken");
     axios
       .post(`${API_BASE_URL}/post/postImage/${idData.id}`, formData, {
         headers: {
@@ -76,7 +73,6 @@ function CreatePage() {
         if (err.response && err.response.status === 401) {
           alert("만료된 토큰입니다.");
           window.localStorage.removeItem("accessToken");
-          window.localStorage.removeItem("refreshToken");
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -90,7 +86,7 @@ function CreatePage() {
     fileReader.readAsDataURL(file);
     fileReader.onload = (e) => {
       if (typeof e.target?.result === "string") {
-        setImgSrc((previmgsrc) => [...previmgsrc, e.target?.result]);
+        setImgSrc(e.target?.result);
       }
     };
   };
@@ -100,7 +96,7 @@ function CreatePage() {
   };
 
   const onCreate = () => {
-    if (data.title.length >= 3) {
+    if (data.title.length >= 5) {
       if (data.content.length >= 20) {
         if (data.language !== "") {
           if (data.major !== "") {
@@ -153,8 +149,8 @@ function CreatePage() {
             type="text"
             id="title"
             name="title"
-            placeholder="제목을 입력해주세요 (3~70자)"
-            maxLength="70"
+            placeholder="제목을 입력해주세요 (5~25자)"
+            maxLength="25"
           ></S.title_input>
         </S.title>
         <S.two>
@@ -205,12 +201,13 @@ function CreatePage() {
         </S.contents>
         <S.Img_label>사진</S.Img_label>
         <S.Img_div>
-          {imgSrc.map((item, index) => (
-            <S.Img_input src={item}></S.Img_input>
-          ))}
-          <S.Img onClick={handleImageClick}>
-            <S.plus_Img></S.plus_Img>
-          </S.Img>
+          {imgSrc !== "" ? (
+            <img src={imgSrc} width="200px" height="200px"></img>
+          ) : (
+            <S.Img onClick={handleImageClick}>
+              <S.plus_Img></S.plus_Img>
+            </S.Img>
+          )}
         </S.Img_div>
         <S.button onClick={onCreate}>등록하기</S.button>
       </S.Body>
@@ -219,6 +216,7 @@ function CreatePage() {
         accept="image/png, image/jpeg"
         ref={imageInputRef}
         onChange={handleChange}
+        id="fileInput"
       />
     </S.Background>
   );

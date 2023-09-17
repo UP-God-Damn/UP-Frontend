@@ -1,7 +1,6 @@
 import { styled } from "styled-components";
 import Comment from "../icons/comment";
 import MainCalender from "../icons/MainCalender";
-import MainPeople from "../icons/MainPeople";
 import Mainlange from "../icons/Mainlange";
 
 export const Background = styled.div`
@@ -13,7 +12,6 @@ export const Background = styled.div`
 
 export const Body = styled.div`
   width: 993px;
-  height: 665px;
   background-color: white;
   border-radius: 20px;
   margin: 0px 363px 0px 363px;
@@ -121,6 +119,9 @@ export const comment = styled.textarea`
 export const Plus = styled.button`
   background-color: white;
   border: none;
+  &:hover{
+    cursor:pointer;
+  }
 `;
 
 export const CommentImg = styled(Comment)`
@@ -236,4 +237,9 @@ export const click_div = styled.div`
 export const click_dis = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const Img = styled.img`
+  width: 100px;
+  height: 100px;
 `;
