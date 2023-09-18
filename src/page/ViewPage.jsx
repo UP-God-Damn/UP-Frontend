@@ -10,16 +10,20 @@ function ViewPage() {
   const [comments, setComments] = useState([]);
   const [clk, setClk] = useState();
   const [setting, setSetting] = useState(false);
-
+  
   const onRefresh = () => {
+    const token = localStorage.getItem("refreshToken");
     axios
-      .post(`${API_BASE_URL}/user/refresh`, {
+      .post(`${API_BASE_URL}/user/refresh`, "",{
         headers: {
-          "Refresh-Token": `${localStorage.getItem("refreshToken")}`,
+          'Refresh-Token': `${token}`,
         },
       })
       .then((res) => {
         console.log(res.data);
+        const { accessToken, refreshToken } = res.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
       })
       .catch((err) => {
         console.log(err);
