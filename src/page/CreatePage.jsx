@@ -16,6 +16,22 @@ function CreatePage() {
   const formData = new FormData();
   const [idData, setIdData] = useState("");
 
+  const onRefresh = () => {
+    axios
+      .post(`${API_BASE_URL}/user/refresh`, {
+        headers: {
+          "Refresh-Token": `${localStorage.getItem("refreshToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
+
   const formD = () => {
     if (imageInputRef.current && imageInputRef.current.files[0]) {
       formData.append("image", imageInputRef.current.files[0]);
@@ -42,8 +58,8 @@ function CreatePage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -71,8 +87,8 @@ function CreatePage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }

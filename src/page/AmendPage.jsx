@@ -11,16 +11,28 @@ function AmendPage() {
     state: "",
     major: "",
   });
-  const imageInputRef = useRef(null);
   const [getData, setGetData] = useState("");
-  const [imgSrc, setImgSrc] = useState([]);
+  const [imgSrc, setImgSrc] = useState("");
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const onRefresh = () => {
+    axios
+      .post(`${API_BASE_URL}/user/refresh`, {
+        headers: {
+          "Refresh-Token": `${localStorage.getItem("refreshToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
 
   useEffect(() => {
     console.log(getData);
+    setImgSrc(getData.file);
   }, [getData]);
 
   useEffect(() => {
@@ -42,8 +54,8 @@ function AmendPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -61,34 +73,11 @@ function AmendPage() {
       .then((res) => {
         console.log(res.data);
         setGetData(res.data);
-        onImg();
       })
       .catch((err) => {
         console.log(err);
         alert("에러가 발생했습니다.");
       });
-  };
-
-  const handleChange = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = (e) => {
-      if (typeof e.target?.result === "string") {
-        setImgSrc((previmgsrc) => [...previmgsrc, e.target?.result]);
-      }
-    };
-  };
-
-  const onImg = () => {
-    if (getData.file) {
-      setImgSrc(getData.file);
-    }
-  };
-
-  const handleImageClick = () => {
-    imageInputRef.current.click();
   };
 
   const onRemove = () => {
@@ -123,10 +112,28 @@ function AmendPage() {
       data.language = getData.language;
     }
     if (!data.state) {
-      data.state = getData.state;
+      if (getData.state === "해결") {
+        data.state = "SOLUTION";
+      } else {
+        data.state = "QUESTION";
+      }
     }
     if (!data.major) {
-      data.major = getData.major;
+      if (getData.major === "프론트엔드") {
+        data.major = "FRONTEND";
+      } else if (getData.major === "백엔드") {
+        data.major = "BACKEND";
+      } else if (getData.major === "임베디드") {
+        data.major = "EMBEDDED";
+      } else if (getData.major === "플러터") {
+        data.major = "FLUTTER";
+      } else if (getData.major === "IOS") {
+        data.major = "IOS";
+      } else if (getData.major === "안드로이드") {
+        data.major = "ANDROID";
+      } else {
+        data.major = "DEVOPS";
+      }
     }
     console.log(data);
   };
@@ -226,13 +233,13 @@ function AmendPage() {
             <S.tag_label>분류</S.tag_label>
             <S.tag_select onChange={onChange} id="state" name="state">
               <S.tag_option
-                value="해결"
+                value="SOLUTION"
                 selected={getData.state === "해결" ? "selected" : ""}
               >
                 해결
               </S.tag_option>
               <S.tag_option
-                value="질문"
+                value="QUESTION"
                 selected={getData.state === "질문" ? "selected" : ""}
               >
                 질문
@@ -252,21 +259,14 @@ function AmendPage() {
         </S.contents>
         <S.Img_label>사진</S.Img_label>
         <S.Img_div>
-          {imgSrc.map((item, index) => (
-            <S.Img_input src={item}></S.Img_input>
-          ))}
-          <S.Img onClick={handleImageClick}>
-            <S.plus_Img></S.plus_Img>
-          </S.Img>
+          {imgSrc !== "" ? (
+            <img src={imgSrc} width="200px" height="200px"></img>
+          ) : (
+            <div></div>
+          )}
         </S.Img_div>
         <S.button onClick={onRemove}>수정하기</S.button>
       </S.Body>
-      <S.input
-        type="file"
-        accept="image/png, image/jpeg"
-        ref={imageInputRef}
-        onChange={handleChange}
-      />
     </S.Background>
   );
 }

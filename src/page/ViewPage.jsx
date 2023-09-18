@@ -5,19 +5,31 @@ import axios from "axios";
 function ViewPage() {
   const API_BASE_URL = process.env.REACT_APP_API_URL;
   const [comment, setComment] = useState("");
-  const [del, setDel] = useState(false);
-  const [re, setRe] = useState(false);
+  const [commentAmend, setCommentAmend] = useState("");
   const [data, setData] = useState("");
-  const [contentId, setContentId] = useState("");
   const [comments, setComments] = useState([]);
+  const [clk, setClk] = useState();
+  const [setting, setSetting] = useState(false);
+
+  const onRefresh = () => {
+    axios
+      .post(`${API_BASE_URL}/user/refresh`, {
+        headers: {
+          "Refresh-Token": `${localStorage.getItem("refreshToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
 
   useEffect(() => {
     onData();
   }, []);
-
-  useEffect(() => {
-    console.log(comments);
-  }, [comments]);
 
   const onData = () => {
     const id = localStorage.getItem("id");
@@ -35,8 +47,8 @@ function ViewPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -56,16 +68,14 @@ function ViewPage() {
         },
       })
       .then((res) => {
-        setContentId(res.data);
-        console.log(res.data);
         alert("입력되었습니다.");
         window.location.reload();
       })
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -73,29 +83,63 @@ function ViewPage() {
   };
 
   const onAmendComment = () => {
-    const id = localStorage.getItem("id");
+    const id = localStorage.getItem("commentId");
     const commentData = {
       id: id,
-      content: comment,
+      content: commentAmend,
     };
     axios
-      .patch(`${API_BASE_URL}/comment`, commentData, {
+      .patch(`${API_BASE_URL}/comment/${id}`, commentData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
-        console.log(res.data);
         alert("수정되었습니다.");
+        setSetting(false);
+        setClk("");
         window.location.reload();
       })
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
-          alert("에러가 발생했습니다.");
+          if (err.response && err.response.status === 403) {
+            alert("권한이 없습니다.");
+          } else {
+            alert("에러가 발생했습니다.");
+          }
+        }
+      });
+  };
+
+  const onDelComment = () => {
+    const id = localStorage.getItem("commentId");
+    axios
+      .delete(`${API_BASE_URL}/comment/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+      .then((res) => {
+        alert("삭제되었습니다.");
+        setSetting(false);
+        setClk("");
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem("accessToken");
+          onRefresh();
+        } else {
+          if (err.response && err.response.status === 403) {
+            alert("권한이 없습니다.");
+          } else {
+            alert("에러가 발생했습니다.");
+          }
         }
       });
   };
@@ -112,23 +156,21 @@ function ViewPage() {
     }
   };
 
-  const onRetouch = () => {
-    setRe(true);
-  };
-
   const onSave = () => {
     if (window.confirm("댓글을 수정하시겠습니까?")) {
-      alert("수정되었습니다.");
-      setRe(false);
-      setDel(false);
+      onAmendComment();
     } else {
       alert("취소되었습니다.");
     }
   };
 
+  const onRetouch = () => {
+    setSetting(true);
+  };
+
   const onDelete = () => {
     if (window.confirm("댓글을 삭제하시겠습니까?")) {
-      alert("삭제되었습니다.");
+      onDelComment();
     } else {
       alert("취소되었습니다.");
     }
@@ -137,11 +179,19 @@ function ViewPage() {
   const onOne = (e) => {
     const postId = e.currentTarget.getAttribute("name");
     localStorage.setItem("commentId", postId);
-    setDel(!del);
+    if (clk == "") {
+      setClk(postId);
+    } else {
+      setClk("");
+    }
   };
 
   const ChangeComment = (input) => {
     setComment(input.target.value);
+  };
+
+  const ChangeCommentAmend = (input) => {
+    setCommentAmend(input.target.value);
   };
 
   return (
@@ -187,105 +237,66 @@ function ViewPage() {
             <div>
               {comments.map((item) => (
                 <div key={item.id}>
-                  {item.id === contentId ? (
-                    <S.comment_li style={{ height: re ? "150px" : "75px" }}>
+                  <S.comment_li
+                    style={{
+                      height: item.id == clk && setting ? "150px" : "75px",
+                    }}
+                  >
+                    <S.li_div>
                       <S.li_div>
-                        <S.li_div>
-                          <S.PeopleIcon src={item.profileImage}></S.PeopleIcon>
-                          <S.comment_id>{item.userNickname}</S.comment_id>
-                          <S.comment_date>{item.createDate}</S.comment_date>
-                        </S.li_div>
-                        <S.one_div onClick={onOne} name={item.id}>
-                          <S.one></S.one>
-                          <S.one></S.one>
-                          <S.one></S.one>
-                        </S.one_div>
+                        <S.PeopleIcon src={item.profileImage}></S.PeopleIcon>
+                        <S.comment_id>{item.userNickname}</S.comment_id>
+                        <S.comment_date>{item.createDate}</S.comment_date>
                       </S.li_div>
-                      <S.click_div>
-                        {re ? (
-                          <S.comment_text
-                            defaultValue={item.content}
-                          ></S.comment_text>
-                        ) : (
-                          <S.comment_font>{item.content}</S.comment_font>
-                        )}
-                        {re ? (
-                          <S.click_dis>
-                            <S.click_save
-                              onClick={onSave}
-                              style={{ display: del ? "inline-block" : "none" }}
-                            >
-                              저장하기
-                            </S.click_save>
-                          </S.click_dis>
-                        ) : (
-                          <S.click_dis>
-                            <S.click_retouch
-                              onClick={onRetouch}
-                              style={{ display: del ? "inline-block" : "none" }}
-                            >
-                              수정하기
-                            </S.click_retouch>
-                            <S.click_del
-                              onClick={onDelete}
-                              style={{ display: del ? "inline-block" : "none" }}
-                            >
-                              삭제하기
-                            </S.click_del>
-                          </S.click_dis>
-                        )}
-                      </S.click_div>
-                    </S.comment_li>
-                  ) : (
-                    <S.comment_li style={{ height: re ? "150px" : "75px" }}>
-                      <S.li_div>
-                        <S.li_div>
-                          <S.PeopleIcon src={item.profileImage}></S.PeopleIcon>
-                          <S.comment_id>{item.userNickname}</S.comment_id>
-                          <S.comment_date>{item.createDate}</S.comment_date>
-                        </S.li_div>
-                        <S.one_div onClick={onOne} name={item.id}>
-                          <S.one></S.one>
-                          <S.one></S.one>
-                          <S.one></S.one>
-                        </S.one_div>
-                      </S.li_div>
-                      <S.click_div>
-                        {re ? (
-                          <S.comment_text
-                            defaultValue={item.content}
-                          ></S.comment_text>
-                        ) : (
-                          <S.comment_font>{item.content}</S.comment_font>
-                        )}
-                        {re ? (
-                          <S.click_dis>
-                            <S.click_save
-                              onClick={onSave}
-                              style={{ display: del ? "inline-block" : "none" }}
-                            >
-                              저장하기
-                            </S.click_save>
-                          </S.click_dis>
-                        ) : (
-                          <S.click_dis>
-                            <S.click_retouch
-                              onClick={onRetouch}
-                              style={{ display: del ? "inline-block" : "none" }}
-                            >
-                              수정하기
-                            </S.click_retouch>
-                            <S.click_del
-                              onClick={onDelete}
-                              style={{ display: del ? "inline-block" : "none" }}
-                            >
-                              삭제하기
-                            </S.click_del>
-                          </S.click_dis>
-                        )}
-                      </S.click_div>
-                    </S.comment_li>
-                  )}
+                      <S.one_div onClick={onOne} name={item.id}>
+                        <S.one></S.one>
+                        <S.one></S.one>
+                        <S.one></S.one>
+                      </S.one_div>
+                    </S.li_div>
+                    <S.click_div>
+                      {item.id == clk && setting ? (
+                        <S.comment_text
+                          defaultValue={item.content}
+                          onChange={ChangeCommentAmend}
+                        ></S.comment_text>
+                      ) : (
+                        <S.comment_font>{item.content}</S.comment_font>
+                      )}
+                      {setting ? (
+                        <S.click_dis>
+                          <S.click_save
+                            onClick={onSave}
+                            style={{
+                              display: item.id == clk ? "inline-block" : "none",
+                            }}
+                          >
+                            저장하기
+                          </S.click_save>
+                        </S.click_dis>
+                      ) : (
+                        <S.click_dis>
+                          <S.click_retouch
+                            onClick={onRetouch}
+                            style={{
+                              display: item.id == clk ? "inline-block" : "none",
+                            }}
+                            name={item.id}
+                          >
+                            수정하기
+                          </S.click_retouch>
+                          <S.click_del
+                            onClick={onDelete}
+                            style={{
+                              display: item.id == clk ? "inline-block" : "none",
+                            }}
+                          >
+                            삭제하기
+                          </S.click_del>
+                        </S.click_dis>
+                      )}
+                    </S.click_div>
+                  </S.comment_li>
                 </div>
               ))}
             </div>

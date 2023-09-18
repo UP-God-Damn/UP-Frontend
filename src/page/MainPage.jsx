@@ -11,6 +11,22 @@ function MainPage() {
   const [responseData, setResponseData] = useState([]);
   const [pageNum, setPageNum] = useState(0);
 
+  const onRefresh = () => {
+    axios
+      .post(`${API_BASE_URL}/user/refresh`, {
+        headers: {
+          "Refresh-Token": `${localStorage.getItem("refreshToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
+
   useEffect(() => {
     if (major !== "" || selectedTag !== "") {
       onGetSearch();
@@ -78,8 +94,8 @@ function MainPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
           localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -128,7 +144,7 @@ function MainPage() {
           <S.mypage_div onClick={onMypage}>
             <S.Div>
               <S.Img>
-                  <S.imgSrc src={data.profileImgeUrl}/>
+                <S.imgSrc src={data.profileImgeUrl} />
               </S.Img>
               <S.login_id>{data.nickname}</S.login_id>
             </S.Div>

@@ -9,6 +9,22 @@ function MyPage() {
   const [pageNum, setPageNum] = useState(0);
   const [responseData, setResponseData] = useState([]);
 
+  const onRefresh = () => {
+    axios
+      .post(`${API_BASE_URL}/user/refresh`, {
+        headers: {
+          "Refresh-Token": `${localStorage.getItem("refreshToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("에러가 발생했습니다.");
+      });
+  };
+
   useEffect(() => {
     onGetPage();
     setToken(localStorage.getItem("accessToken"));
@@ -32,8 +48,8 @@ function MyPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -54,8 +70,8 @@ function MyPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -75,8 +91,8 @@ function MyPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          alert("만료된 토큰입니다.");
-          window.localStorage.removeItem("accessToken");
+          localStorage.removeItem("accessToken");
+          onRefresh();
         } else {
           alert("에러가 발생했습니다.");
         }
@@ -190,7 +206,9 @@ function MyPage() {
                     </S.tag_div>
                   </S.main_left>
                   <S.main_right>
-                    <S.button onClick={onAmend} name={post.id}>수정</S.button>
+                    <S.button onClick={onAmend} name={post.id}>
+                      수정
+                    </S.button>
                     <S.button onClick={onDel}>삭제</S.button>
                   </S.main_right>
                 </S.main>
