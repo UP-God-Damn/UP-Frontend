@@ -5,8 +5,6 @@ import MainCalender from "../icons/MainCalender";
 import MainPeople from "../icons/MainPeople";
 import Mainlange from "../icons/Mainlange";
 
-import profile from "../icons/profile_main";
-
 export const Background = styled.div`
   background-color: #f0f0f0;
   width: 100%;
@@ -25,12 +23,19 @@ export const body = styled.div`
 
 export const plus = styled.div`
   margin: 10px 0px;
-  text-align: center; 
+  text-align: center;
   color: #191c1b;
   font-size: 15px;
   &:hover {
     cursor: pointer;
   }
+`;
+
+export const plus_div = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 150px;
 `;
 
 export const Login = styled.div`
@@ -98,8 +103,8 @@ export const Img = styled.div`
 `;
 
 export const imgSrc = styled.img`
-  width:40px;
-  height:40px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
 `;
 

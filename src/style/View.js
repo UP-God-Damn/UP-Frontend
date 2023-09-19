@@ -240,6 +240,5 @@ export const click_dis = styled.div`
 `;
 
 export const Img = styled.img`
-  width: 100px;
-  height: 100px;
+  height: 300px;
 `;

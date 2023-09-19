@@ -14,9 +14,9 @@ function MainPage() {
   const onRefresh = () => {
     const token = localStorage.getItem("refreshToken");
     axios
-      .post(`${API_BASE_URL}/user/refresh`, "",{
+      .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
-          'Refresh-Token': `${token}`,
+          "Refresh-Token": `${token}`,
         },
       })
       .then((res) => {
@@ -39,22 +39,6 @@ function MainPage() {
       onGetPage();
     }
   }, [selectedTag, major, pageNum]);
-
-  useEffect(() => {
-    const titleSearch = localStorage.getItem("search");
-    setToken(localStorage.getItem("accessToken"));
-    if (titleSearch) {
-      onGetSearch();
-    } else {
-      onGetPage();
-    }
-    if (token !== "") {
-      onData();
-    }
-    window.onbeforeunload = function pushRefresh() {
-      window.scrollTo(0, 0);
-    };
-  }, []);
 
   const onGetSearch = () => {
     const titleSearch = localStorage.getItem("search");
@@ -97,18 +81,40 @@ function MainPage() {
         setData(res.data);
       })
       .catch((err) => {
-        console.error(err);
         if (err.response && err.response.status === 401) {
           localStorage.removeItem("accessToken");
-          onRefresh();
+          if (localStorage.getItem("refreshToken")) {
+            onRefresh();
+          }
         } else {
           alert("에러가 발생했습니다.");
         }
       });
   };
 
+  useEffect(() => {
+    const titleSearch = localStorage.getItem("search");
+    setToken(localStorage.getItem("accessToken"));
+    if (titleSearch) {
+      onGetSearch();
+    } else {
+      onGetPage();
+    }
+    window.onbeforeunload = function pushRefresh() {
+      window.scrollTo(0, 0);
+    };
+  }, []);
+
+  useEffect(() => {
+    onData();
+  }, [token]);
+
   const onPlus = () => {
     setPageNum(pageNum + 1);
+  };
+
+  const onMinus = () => {
+    setPageNum(pageNum - 1);
   };
 
   const onLogin = () => {
@@ -246,7 +252,10 @@ function MainPage() {
             </S.tag_div>
           </S.main>
         ))}
-        <S.plus onClick={onPlus}>더보기</S.plus>
+        <S.plus_div>
+          <S.plus onClick={onMinus}>이전</S.plus>
+          <S.plus onClick={onPlus}>다음</S.plus>
+        </S.plus_div>
       </S.body>
     </S.Background>
   );

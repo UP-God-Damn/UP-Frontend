@@ -10,13 +10,13 @@ function ViewPage() {
   const [comments, setComments] = useState([]);
   const [clk, setClk] = useState();
   const [setting, setSetting] = useState(false);
-  
+
   const onRefresh = () => {
     const token = localStorage.getItem("refreshToken");
     axios
-      .post(`${API_BASE_URL}/user/refresh`, "",{
+      .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
-          'Refresh-Token': `${token}`,
+          "Refresh-Token": `${token}`,
         },
       })
       .then((res) => {
@@ -242,11 +242,7 @@ function ViewPage() {
             <div>
               {comments.map((item) => (
                 <div key={item.id}>
-                  <S.comment_li
-                    style={{
-                      height: item.id == clk && setting ? "150px" : "75px",
-                    }}
-                  >
+                  <S.comment_li>
                     <S.li_div>
                       <S.li_div>
                         <S.PeopleIcon src={item.profileImage}></S.PeopleIcon>
@@ -264,6 +260,7 @@ function ViewPage() {
                         <S.comment_text
                           defaultValue={item.content}
                           onChange={ChangeCommentAmend}
+                          name={item.content}
                         ></S.comment_text>
                       ) : (
                         <S.comment_font>{item.content}</S.comment_font>

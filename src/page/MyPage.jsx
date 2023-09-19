@@ -110,11 +110,14 @@ function MyPage() {
     axios
       .delete(`${API_BASE_URL}/user/logout`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
         window.localStorage.removeItem("accessToken");
+        window.localStorage.removeItem("refreshToken");
+        alert("로그아웃되었습니다.");
+        window.location.assign("/");
       })
       .catch((err) => {
         console.log(err);
@@ -125,8 +128,6 @@ function MyPage() {
   const onLogout = () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
       onServer();
-      alert("로그아웃되었습니다.");
-      window.location.assign("/");
     } else {
       alert("취소되었습니다.");
     }

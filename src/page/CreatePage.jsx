@@ -221,7 +221,7 @@ function CreatePage() {
         <S.Img_label>사진</S.Img_label>
         <S.Img_div>
           {imgSrc !== "" ? (
-            <img src={imgSrc} width="200px" height="200px"></img>
+            <img src={imgSrc} height="200px"></img>
           ) : (
             <S.Img onClick={handleImageClick}>
               <S.plus_Img></S.plus_Img>

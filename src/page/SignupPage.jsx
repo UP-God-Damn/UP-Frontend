@@ -204,7 +204,7 @@ function SignupPage() {
             <A.image_div>
               <A.label>프로필 이미지</A.label>
               {imgSrc !== "" ? (
-                <img src={imgSrc} width="300px" height="300px"></img>
+                <img src={imgSrc} height="300px"></img>
               ) : (
                 <A.image onClick={handleImageClick}>
                   <A.inpor>
