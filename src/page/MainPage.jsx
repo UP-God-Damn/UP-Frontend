@@ -24,6 +24,7 @@ function MainPage() {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -218,7 +219,7 @@ function MainPage() {
             <S.Major_option value="EMBEDDED">임베디드</S.Major_option>
             <S.Major_option value="FLUTTER">플러터</S.Major_option>
             <S.Major_option value="IOS">IOS</S.Major_option>
-            <S.Major_option value="ANDROID">안드로이드</S.Major_option>
+            <S.Major_option value="AOS">안드로이드</S.Major_option>
             <S.Major_option value="DEVOPS">DEVOPS</S.Major_option>
           </S.Major>
         </S.border>

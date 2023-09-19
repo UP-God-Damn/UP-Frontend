@@ -12,9 +12,9 @@ function MyPage() {
   const onRefresh = () => {
     const token = localStorage.getItem("refreshToken");
     axios
-      .post(`${API_BASE_URL}/user/refresh`, "",{
+      .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
-          'Refresh-Token': `${token}`,
+          "Refresh-Token": `${token}`,
         },
       })
       .then((res) => {
@@ -22,6 +22,7 @@ function MyPage() {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -47,6 +48,7 @@ function MyPage() {
         },
       })
       .then((res) => {
+        console.log(res.data.postResponses);
         setResponseData(res.data.postResponses);
       })
       .catch((err) => {
@@ -70,6 +72,7 @@ function MyPage() {
       })
       .then((res) => {
         alert("삭제되었습니다.");
+        window.location.reload();
       })
       .catch((err) => {
         console.error(err);
@@ -143,8 +146,10 @@ function MyPage() {
     window.location.assign("/amend");
   };
 
-  const onDel = () => {
+  const onDel = (e) => {
     if (window.confirm("삭제하시겠습니까?")) {
+      const postId = e.currentTarget.getAttribute("name");
+      localStorage.setItem("id", postId);
       onDelete();
     } else {
       alert("취소되었습니다.");
@@ -161,11 +166,7 @@ function MyPage() {
           </S.body_head>
           <S.body_top>
             <S.Img>
-              {data.profileImgUrl ? (
-                <img src={data.profileImgeUrl}></img>
-              ) : (
-                <S.imgSrc />
-              )}
+                <S.imgSrc src={data.profileImgeUrl}></S.imgSrc>
             </S.Img>
             <S.label_div>
               <S.label>아이디</S.label>
@@ -213,7 +214,9 @@ function MyPage() {
                     <S.button onClick={onAmend} name={post.id}>
                       수정
                     </S.button>
-                    <S.button onClick={onDel}>삭제</S.button>
+                    <S.button onClick={onDel} name={post.id}>
+                      삭제
+                    </S.button>
                   </S.main_right>
                 </S.main>
               ))}

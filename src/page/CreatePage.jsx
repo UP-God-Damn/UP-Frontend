@@ -11,17 +11,18 @@ function CreatePage() {
     state: "",
     major: "",
   });
+  const formData = new FormData();
+  const fileInput = document.querySelector("#fileInput");
   const imageInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState("");
-  const formData = new FormData();
   const [idData, setIdData] = useState("");
 
   const onRefresh = () => {
     const token = localStorage.getItem("refreshToken");
     axios
-      .post(`${API_BASE_URL}/user/refresh`, "",{
+      .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
-          'Refresh-Token': `${token}`,
+          "Refresh-Token": `${token}`,
         },
       })
       .then((res) => {
@@ -29,6 +30,7 @@ function CreatePage() {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -37,15 +39,12 @@ function CreatePage() {
   };
 
   const formD = () => {
-    if (imageInputRef.current && imageInputRef.current.files[0]) {
-      formData.append("image", imageInputRef.current.files[0]);
+    if (fileInput) {
+      formData.append("image", fileInput.files[0]);
     } else {
       formData.append("image", "");
     }
-    for (let key of formData.keys()) {
-      console.log(key, ":", formData.get(key));
-    }
-    server();
+    serverFormData();
   };
 
   const server = () => {
@@ -72,7 +71,7 @@ function CreatePage() {
 
   useEffect(() => {
     if (idData !== "") {
-      serverFormData();
+      formD();
     }
   }, [idData]);
 
@@ -122,7 +121,7 @@ function CreatePage() {
           if (data.major !== "") {
             if (data.state !== "") {
               if (window.confirm("등록하시겠습니까?")) {
-                formD();
+                server();
               } else {
                 alert("취소되었습니다.");
               }
@@ -196,7 +195,7 @@ function CreatePage() {
               <S.major_option value="EMBEDDED">임베디드</S.major_option>
               <S.major_option value="FLUTTER">플러터</S.major_option>
               <S.major_option value="IOS">IOS</S.major_option>
-              <S.major_option value="ANDROID">안드로이드</S.major_option>
+              <S.major_option value="AOS">안드로이드</S.major_option>
               <S.major_option value="DEVOPS">DEVOPS</S.major_option>
             </S.major_select>
           </S.major>

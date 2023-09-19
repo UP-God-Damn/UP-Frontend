@@ -24,6 +24,7 @@ function ViewPage() {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);

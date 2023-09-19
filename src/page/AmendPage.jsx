@@ -27,6 +27,7 @@ function AmendPage() {
         const { accessToken, refreshToken } = res.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
+        window.location.reload();
       })
       .catch((err) => {
         console.log(err);
@@ -134,7 +135,7 @@ function AmendPage() {
       } else if (getData.major === "IOS") {
         data.major = "IOS";
       } else if (getData.major === "안드로이드") {
-        data.major = "ANDROID";
+        data.major = "AOS";
       } else {
         data.major = "DEVOPS";
       }
@@ -220,7 +221,7 @@ function AmendPage() {
                 IOS
               </S.major_option>
               <S.major_option
-                value="ANDROID"
+                value="AOS"
                 selected={getData.major === "안드로이드" ? "selected" : ""}
               >
                 안드로이드

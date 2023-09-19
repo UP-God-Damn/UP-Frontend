@@ -230,4 +230,8 @@ export const Img = styled.div`
   margin-left: 30px;
 `;
 
-export const imgSrc = styled(profile)``;
+export const imgSrc = styled.img`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+`;
