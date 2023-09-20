@@ -18,7 +18,7 @@ function CreatePage() {
   const [idData, setIdData] = useState("");
 
   const onRefresh = () => {
-    const token = localStorage.getItem("refreshToken");
+    const token = sessionStorage.getItem("refreshToken");
     axios
       .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
@@ -28,8 +28,8 @@ function CreatePage() {
       .then((res) => {
         console.log(res.data);
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
@@ -48,7 +48,7 @@ function CreatePage() {
   };
 
   const server = () => {
-    const token = localStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("accessToken");
     axios
       .post(`${API_BASE_URL}/post`, data, {
         headers: {
@@ -61,7 +61,7 @@ function CreatePage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -76,7 +76,7 @@ function CreatePage() {
   }, [idData]);
 
   const serverFormData = () => {
-    const token = localStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("accessToken");
     axios
       .post(`${API_BASE_URL}/post/postImage/${idData.id}`, formData, {
         headers: {
@@ -90,7 +90,7 @@ function CreatePage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");

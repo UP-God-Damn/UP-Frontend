@@ -25,8 +25,8 @@ function LoginPage() {
       })
       .then((res) => {
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
         alert(`환영합니다.`);
         window.location.assign("/");
       })

@@ -2,7 +2,6 @@ import { styled } from "styled-components";
 import MainCalender from "../icons/MainCalender";
 import MainPeople from "../icons/MainPeople";
 import Mainlange from "../icons/Mainlange";
-import profile from "../icons/profile";
 
 export const Background = styled.div`
   background-color: #f0f0f0;
@@ -234,4 +233,11 @@ export const imgSrc = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 50%;
+`;
+
+export const plus_div = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 150px;
 `;

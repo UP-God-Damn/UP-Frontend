@@ -12,7 +12,7 @@ function ViewPage() {
   const [setting, setSetting] = useState(false);
 
   const onRefresh = () => {
-    const token = localStorage.getItem("refreshToken");
+    const token = sessionStorage.getItem("refreshToken");
     axios
       .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
@@ -22,8 +22,8 @@ function ViewPage() {
       .then((res) => {
         console.log(res.data);
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
@@ -41,7 +41,7 @@ function ViewPage() {
     axios
       .get(`${API_BASE_URL}/post/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -52,7 +52,7 @@ function ViewPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -69,7 +69,7 @@ function ViewPage() {
     axios
       .post(`${API_BASE_URL}/comment`, commentData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -79,7 +79,7 @@ function ViewPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -96,7 +96,7 @@ function ViewPage() {
     axios
       .patch(`${API_BASE_URL}/comment/${id}`, commentData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -108,7 +108,7 @@ function ViewPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           if (err.response && err.response.status === 403) {
@@ -125,7 +125,7 @@ function ViewPage() {
     axios
       .delete(`${API_BASE_URL}/comment/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -137,7 +137,7 @@ function ViewPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           if (err.response && err.response.status === 403) {

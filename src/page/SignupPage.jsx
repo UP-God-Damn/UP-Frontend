@@ -28,7 +28,7 @@ function SignupPage() {
   };
 
   const serverFormData = () => {
-    const token = localStorage.getItem("accessToken");
+    const token = sessionStorage.getItem("accessToken");
     axios
       .post(
         `${API_BASE_URL}/user/profileImage/${signData.accountId}`,
@@ -40,7 +40,7 @@ function SignupPage() {
         }
       )
       .then((res) => {
-        alert(`환영합니다.`);
+        alert(`프로필 사진 등록이 완료되었습니다..`);
         window.location.assign("/");
       })
       .catch((err) => {
@@ -54,9 +54,9 @@ function SignupPage() {
       .post(`${API_BASE_URL}/user/signup`, signData)
       .then((res) => {
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        alert("확인되었습니다.");
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
+        alert("가입되었습니다.");
       })
       .catch((err) => {
         console.log(err);

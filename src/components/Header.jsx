@@ -17,22 +17,26 @@ function Header() {
   };
 
   useEffect(() => {
-    setToken(localStorage.getItem("accessToken"));
+    setToken(sessionStorage.getItem("accessToken"));
   }, []);
 
   const onLogo = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/");
   };
 
   const onLogin = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/login");
   };
 
   const onSignup = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/signup");
   };
 
   const onMypage = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/mypage");
   };
 

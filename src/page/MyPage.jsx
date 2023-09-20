@@ -10,7 +10,7 @@ function MyPage() {
   const [responseData, setResponseData] = useState([]);
 
   const onRefresh = () => {
-    const token = localStorage.getItem("refreshToken");
+    const token = sessionStorage.getItem("refreshToken");
     axios
       .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
@@ -20,8 +20,8 @@ function MyPage() {
       .then((res) => {
         console.log(res.data);
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
@@ -32,7 +32,7 @@ function MyPage() {
 
   useEffect(() => {
     onGetPage();
-    setToken(localStorage.getItem("accessToken"));
+    setToken(sessionStorage.getItem("accessToken"));
     onData();
   }, []);
 
@@ -44,7 +44,7 @@ function MyPage() {
     axios
       .get(`${API_BASE_URL}/post/user?page=${pageNum}&size=4`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -54,7 +54,7 @@ function MyPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -67,7 +67,7 @@ function MyPage() {
     axios
       .delete(`${API_BASE_URL}/post/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -77,7 +77,7 @@ function MyPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -89,7 +89,7 @@ function MyPage() {
     axios
       .get(`${API_BASE_URL}/user`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -98,7 +98,7 @@ function MyPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -110,12 +110,12 @@ function MyPage() {
     axios
       .delete(`${API_BASE_URL}/user/logout`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
-        window.localStorage.removeItem("accessToken");
-        window.localStorage.removeItem("refreshToken");
+        sessionStorage.removeItem("accessToken");
+        sessionStorage.removeItem("refreshToken");
         alert("로그아웃되었습니다.");
         window.location.assign("/");
       })
@@ -135,6 +135,10 @@ function MyPage() {
 
   const onPlus = () => {
     setPageNum(pageNum + 1);
+  };
+
+  const onMinus = () => {
+    setPageNum(pageNum - 1);
   };
 
   const onView = () => {
@@ -167,7 +171,7 @@ function MyPage() {
           </S.body_head>
           <S.body_top>
             <S.Img>
-                <S.imgSrc src={data.profileImgeUrl}></S.imgSrc>
+              <S.imgSrc src={data.profileImgeUrl}></S.imgSrc>
             </S.Img>
             <S.label_div>
               <S.label>아이디</S.label>
@@ -222,7 +226,10 @@ function MyPage() {
                 </S.main>
               ))}
             </S.check>
-            <S.plus onClick={onPlus}>더보기</S.plus>
+            <S.plus_div>
+              <S.plus onClick={onMinus}>이전</S.plus>
+              <S.plus onClick={onPlus}>다음</S.plus>
+            </S.plus_div>
           </S.body_bottom>
         </S.body>
       </S.Background>

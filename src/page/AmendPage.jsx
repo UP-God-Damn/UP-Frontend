@@ -15,7 +15,7 @@ function AmendPage() {
   const [imgSrc, setImgSrc] = useState("");
 
   const onRefresh = () => {
-    const token = localStorage.getItem("refreshToken");
+    const token = sessionStorage.getItem("refreshToken");
     axios
       .post(`${API_BASE_URL}/user/refresh`, "",{
         headers: {
@@ -25,8 +25,8 @@ function AmendPage() {
       .then((res) => {
         console.log(res.data);
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
@@ -49,7 +49,7 @@ function AmendPage() {
     axios
       .patch(`${API_BASE_URL}/post/${id}`, data, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -59,7 +59,7 @@ function AmendPage() {
       .catch((err) => {
         console.error(err);
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
+          sessionStorage.removeItem("accessToken");
           onRefresh();
         } else {
           alert("에러가 발생했습니다.");
@@ -72,7 +72,7 @@ function AmendPage() {
     axios
       .get(`${API_BASE_URL}/post/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -265,7 +265,7 @@ function AmendPage() {
         <S.Img_label>사진</S.Img_label>
         <S.Img_div>
           {imgSrc !== "" ? (
-            <img src={imgSrc} width="200px" height="200px"></img>
+            <img src={imgSrc} height="200px"></img>
           ) : (
             <div></div>
           )}

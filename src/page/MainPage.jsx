@@ -12,7 +12,7 @@ function MainPage() {
   const [pageNum, setPageNum] = useState(0);
 
   const onRefresh = () => {
-    const token = localStorage.getItem("refreshToken");
+    const token = sessionStorage.getItem("refreshToken");
     axios
       .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
@@ -22,8 +22,8 @@ function MainPage() {
       .then((res) => {
         console.log(res.data);
         const { accessToken, refreshToken } = res.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        sessionStorage.setItem("accessToken", accessToken);
+        sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
@@ -33,7 +33,8 @@ function MainPage() {
   };
 
   useEffect(() => {
-    if (major !== "" || selectedTag !== "") {
+    const titleSearch = localStorage.getItem("search");
+    if (major || selectedTag || titleSearch) {
       onGetSearch();
     } else {
       onGetPage();
@@ -74,7 +75,7 @@ function MainPage() {
     axios
       .get(`${API_BASE_URL}/user`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
         },
       })
       .then((res) => {
@@ -82,8 +83,8 @@ function MainPage() {
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
-          localStorage.removeItem("accessToken");
-          if (localStorage.getItem("refreshToken")) {
+          sessionStorage.removeItem("accessToken");
+          if (sessionStorage.getItem("refreshToken")) {
             onRefresh();
           }
         } else {
@@ -94,15 +95,13 @@ function MainPage() {
 
   useEffect(() => {
     const titleSearch = localStorage.getItem("search");
-    setToken(localStorage.getItem("accessToken"));
+    setToken(sessionStorage.getItem("accessToken"));
+    console.log(titleSearch);
     if (titleSearch) {
       onGetSearch();
     } else {
       onGetPage();
     }
-    window.onbeforeunload = function pushRefresh() {
-      window.scrollTo(0, 0);
-    };
   }, []);
 
   useEffect(() => {
@@ -118,18 +117,22 @@ function MainPage() {
   };
 
   const onLogin = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/login");
   };
 
   const onMypage = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/mypage");
   };
 
   const onMessage = () => {
+    localStorage.setItem("search", "");
     window.location.assign("/create");
   };
 
   const onView = (e) => {
+    localStorage.setItem("search", "");
     const postId = e.currentTarget.getAttribute("name");
     localStorage.setItem("id", postId);
     window.location.assign("/view");
@@ -144,7 +147,11 @@ function MainPage() {
   };
 
   const handleTagSelect = (tag) => {
-    setSelectedTag(tag);
+    if (tag === selectedTag) {
+      setSelectedTag("");
+    } else {
+      setSelectedTag(tag);
+    }
   };
 
   return (
