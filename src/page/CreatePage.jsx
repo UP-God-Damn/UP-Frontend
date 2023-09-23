@@ -26,14 +26,14 @@ function CreatePage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const { accessToken, refreshToken } = res.data;
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -41,11 +41,20 @@ function CreatePage() {
   const formD = () => {
     if (fileInput) {
       formData.append("image", fileInput.files[0]);
-    } else {
-      formData.append("image", "");
     }
     serverFormData();
   };
+
+  useEffect(() => {
+    if (idData !== "" && imgSrc !== "") {
+      formD();
+    } else {
+      if (idData !== "") {
+        alert("등록되었습니다.");
+        window.location.assign("/");
+      }
+    }
+  }, [idData, imgSrc]);
 
   const server = () => {
     const token = sessionStorage.getItem("accessToken");
@@ -59,7 +68,7 @@ function CreatePage() {
         setIdData(res.data);
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();
@@ -68,12 +77,6 @@ function CreatePage() {
         }
       });
   };
-
-  useEffect(() => {
-    if (idData !== "") {
-      formD();
-    }
-  }, [idData]);
 
   const serverFormData = () => {
     const token = sessionStorage.getItem("accessToken");
@@ -88,7 +91,7 @@ function CreatePage() {
         window.location.assign("/");
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();

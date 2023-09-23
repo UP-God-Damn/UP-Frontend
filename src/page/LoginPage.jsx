@@ -34,7 +34,7 @@ function LoginPage() {
         if (err.response && err.response.status === 409) {
           alert("비밀번호를 확인해주세요.");
         } else {
-          console.log(err);
+          // console.log(err);
           alert("에러가 발생했습니다.");
         }
       });

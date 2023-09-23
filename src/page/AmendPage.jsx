@@ -23,20 +23,20 @@ function AmendPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const { accessToken, refreshToken } = res.data;
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
 
   useEffect(() => {
-    console.log(getData);
+    // console.log(getData);
     setImgSrc(getData.file);
   }, [getData]);
 
@@ -54,10 +54,10 @@ function AmendPage() {
       })
       .then((res) => {
         alert("수정되었습니다.");
-        window.location.assign("/");
+        window.location.assign("/view");
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();
@@ -76,11 +76,11 @@ function AmendPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setGetData(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -152,7 +152,7 @@ function AmendPage() {
   };
 
   const onBack = () => {
-    window.location.assign("/");
+    window.location.assign("/mypage");
   };
 
   return (

@@ -18,14 +18,14 @@ function MyPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const { accessToken, refreshToken } = res.data;
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -48,11 +48,11 @@ function MyPage() {
         },
       })
       .then((res) => {
-        console.log(res.data.postResponses);
+        // console.log(res.data.postResponses);
         setResponseData(res.data.postResponses);
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();
@@ -75,7 +75,7 @@ function MyPage() {
         window.location.reload();
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();
@@ -96,7 +96,7 @@ function MyPage() {
         setData(res.data);
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();
@@ -120,7 +120,7 @@ function MyPage() {
         window.location.assign("/");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };

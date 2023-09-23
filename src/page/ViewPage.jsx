@@ -20,14 +20,14 @@ function ViewPage() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const { accessToken, refreshToken } = res.data;
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -47,7 +47,7 @@ function ViewPage() {
       .then((res) => {
         setData(res.data);
         setComments(res.data.comments);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -77,7 +77,7 @@ function ViewPage() {
         window.location.reload();
       })
       .catch((err) => {
-        console.error(err);
+        // console.error(err);
         if (err.response && err.response.status === 401) {
           sessionStorage.removeItem("accessToken");
           onRefresh();
@@ -113,6 +113,7 @@ function ViewPage() {
         } else {
           if (err.response && err.response.status === 403) {
             alert("권한이 없습니다.");
+            window.location.reload();
           } else {
             alert("에러가 발생했습니다.");
           }
@@ -224,10 +225,12 @@ function ViewPage() {
         </S.title_div>
         <S.body_main>
           <S.main_text>{data.content}</S.main_text>
-          <S.Img
-            src={data.file ? data.file : ""}
-            style={{ display: data.file ? "inline-block" : "none" }}
-          ></S.Img>
+          <S.div>
+            <S.Img
+              src={data.file ? data.file : ""}
+              style={{ display: data.file ? "inline-block" : "none" }}
+            ></S.Img>
+          </S.div>
           <S.comment_div>
             <S.comment
               maxlength="5000"

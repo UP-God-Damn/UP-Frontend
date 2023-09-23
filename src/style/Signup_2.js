@@ -100,4 +100,5 @@ export const Img = styled(img)`
 
 export const input = styled.input`
   display: none;
+  font-family: 'Noto Sans KR', sans-serif;
 `;

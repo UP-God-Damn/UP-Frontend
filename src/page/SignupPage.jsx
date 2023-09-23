@@ -44,7 +44,7 @@ function SignupPage() {
         window.location.assign("/");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -59,7 +59,7 @@ function SignupPage() {
         alert("가입되었습니다.");
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };

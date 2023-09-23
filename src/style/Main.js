@@ -141,10 +141,12 @@ export const Major = styled.select`
   height: 36px;
   margin-right: 45px;
   text-align: center;
+  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 export const Major_option = styled.option`
   font-size: 16px;
+  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 export const border = styled.div`

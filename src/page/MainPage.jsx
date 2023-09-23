@@ -17,17 +17,17 @@ function MainPage() {
       .post(`${API_BASE_URL}/user/refresh`, "", {
         headers: {
           "Refresh-Token": `${token}`,
-        },
+        }, 
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         const { accessToken, refreshToken } = res.data;
         sessionStorage.setItem("accessToken", accessToken);
         sessionStorage.setItem("refreshToken", refreshToken);
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -51,7 +51,7 @@ function MainPage() {
         setResponseData(res.data.postResponses);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -63,10 +63,10 @@ function MainPage() {
       )
       .then((res) => {
         setResponseData(res.data.postResponses);
-        console.log(res.data.postResponses);
+        // console.log(res.data.postResponses);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         alert("에러가 발생했습니다.");
       });
   };
@@ -96,7 +96,7 @@ function MainPage() {
   useEffect(() => {
     const titleSearch = localStorage.getItem("search");
     setToken(sessionStorage.getItem("accessToken"));
-    console.log(titleSearch);
+    // console.log(titleSearch);
     if (titleSearch) {
       onGetSearch();
     } else {
@@ -168,7 +168,7 @@ function MainPage() {
             </S.Div>
             <S.loginImg></S.loginImg>
           </S.mypage_div>
-          <S.login_div>
+          <S.login_div onClick={onMypage}>
             <S.login_label>내 활동</S.login_label>
             <S.login_value>작성글 {data.totalPosts}</S.login_value>
           </S.login_div>

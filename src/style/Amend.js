@@ -10,6 +10,7 @@ export const Background = styled.div`
 `;
 
 export const input = styled.input`
+  font-family: "Noto Sans KR", sans-serif;
   display: none;
 `;
 
@@ -54,6 +55,7 @@ export const title = styled.div`
 `;
 
 export const title_label = styled.label`
+  font-family: "Noto Sans KR", sans-serif;
   font-size: 15px;
   font-weight: bold;
   color: #191c1b;
@@ -62,6 +64,7 @@ export const title_label = styled.label`
 `;
 
 export const title_input = styled.input`
+  font-family: "Noto Sans KR", sans-serif;
   width: 1010px;
   height: 45px;
   border-radius: 10px;
@@ -91,6 +94,7 @@ export const language_div = styled.div`
 `;
 
 export const language_label = styled.label`
+  font-family: "Noto Sans KR", sans-serif;
   font-size: 15px;
   font-weight: bold;
   color: #191c1b;
@@ -98,6 +102,7 @@ export const language_label = styled.label`
 `;
 
 export const language_input = styled.input`
+  font-family: "Noto Sans KR", sans-serif;
   width: 580px;
   height: 45px;
   border-radius: 10px;
@@ -115,6 +120,7 @@ export const major = styled.div`
 `;
 
 export const major_label = styled.label`
+  font-family: "Noto Sans KR", sans-serif;
   font-size: 15px;
   font-weight: bold;
   color: #191c1b;
@@ -122,6 +128,7 @@ export const major_label = styled.label`
 `;
 
 export const major_select = styled.select`
+  font-family: "Noto Sans KR", sans-serif;
   width: 180px;
   height: 44px;
   border-radius: 10px;
@@ -133,7 +140,9 @@ export const major_select = styled.select`
   }
 `;
 
-export const major_option = styled.option``;
+export const major_option = styled.option`
+  font-family: "Noto Sans KR", sans-serif;
+`;
 
 export const tag = styled.div`
   display: flex;
@@ -145,9 +154,11 @@ export const tag_label = styled.label`
   font-weight: bold;
   color: #191c1b;
   margin: 0px 10px 5px 35px;
+  font-family: "Noto Sans KR", sans-serif;
 `;
 
 export const tag_select = styled.select`
+  font-family: "Noto Sans KR", sans-serif;
   width: 180px;
   height: 44px;
   border-radius: 10px;
@@ -159,7 +170,9 @@ export const tag_select = styled.select`
   }
 `;
 
-export const tag_option = styled.option``;
+export const tag_option = styled.option`
+  font-family: "Noto Sans KR", sans-serif;
+`;
 
 export const contents = styled.div`
   display: flex;
@@ -168,6 +181,7 @@ export const contents = styled.div`
 `;
 
 export const contents_label = styled.label`
+  font-family: "Noto Sans KR", sans-serif;
   font-size: 15px;
   font-weight: bold;
   color: #191c1b;
@@ -176,6 +190,7 @@ export const contents_label = styled.label`
 `;
 
 export const contents_input = styled.textarea`
+  font-family: "Noto Sans KR", sans-serif;
   width: 1010px;
   height: 290px;
   border-radius: 10px;
@@ -205,6 +220,7 @@ export const button = styled.button`
 `;
 
 export const Img_label = styled.label`
+  font-family: "Noto Sans KR", sans-serif;
   font-size: 15px;
   font-weight: bold;
   color: #191c1b;

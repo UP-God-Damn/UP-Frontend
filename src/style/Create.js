@@ -11,6 +11,7 @@ export const Background = styled.div`
 
 export const input = styled.input`
   display: none;
+  font-family: "Noto Sans KR", sans-serif;
 `;
 
 export const Body = styled.div`
@@ -68,6 +69,7 @@ export const title_input = styled.input`
   padding: 0px 20px;
   border: 1px solid #e1e2e3;
   color: #191c1b;
+  font-family: "Noto Sans KR", sans-serif;
   &:focus {
     outline: none;
   }
@@ -104,6 +106,7 @@ export const language_input = styled.input`
   padding: 0px 20px;
   border: 1px solid #e1e2e3;
   color: #191c1b;
+  font-family: "Noto Sans KR", sans-serif;
   &:focus {
     outline: none;
   }
@@ -128,12 +131,15 @@ export const major_select = styled.select`
   margin: 0px 0px 0px 30px;
   border: 1px solid #e1e2e3;
   text-align: center;
+  font-family: "Noto Sans KR", sans-serif;
   &:focus {
     outline: none;
   }
 `;
 
-export const major_option = styled.option``;
+export const major_option = styled.option`
+  font-family: "Noto Sans KR", sans-serif;
+`;
 
 export const tag = styled.div`
   display: flex;
@@ -153,13 +159,16 @@ export const tag_select = styled.select`
   border-radius: 10px;
   margin: 0px 0px 0px 30px;
   border: 1px solid #e1e2e3;
+  font-family: "Noto Sans KR", sans-serif;
   text-align: center;
   &:focus {
     outline: none;
   }
 `;
 
-export const tag_option = styled.option``;
+export const tag_option = styled.option`
+  font-family: "Noto Sans KR", sans-serif;
+`;
 
 export const contents = styled.div`
   display: flex;
@@ -184,6 +193,7 @@ export const contents_input = styled.textarea`
   color: #191c1b;
   diplay: flex;
   resize: none;
+  font-family: "Noto Sans KR", sans-serif;
   &:focus {
     outline: none;
   }

@@ -88,10 +88,11 @@ export const information_font = styled.div`
 
 export const body_main = styled.div``;
 
-export const main_text = styled.div`
+export const main_text = styled.pre`
   font-size: 12px;
   color: #191c1b;
   padding: 10px 15px;
+  font-family: 'Noto Sans KR', sans-serif;
 `;
 
 export const comment_div = styled.div`
@@ -111,6 +112,7 @@ export const comment = styled.textarea`
   border: none;
   border-radius: 10px;
   resize: none;
+  font-family: 'Noto Sans KR', sans-serif;
   &:focus {
     outline: none;
   }
@@ -119,8 +121,8 @@ export const comment = styled.textarea`
 export const Plus = styled.button`
   background-color: white;
   border: none;
-  &:hover{
-    cursor:pointer;
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -171,6 +173,7 @@ export const comment_text = styled.textarea`
   border-radius: 10px;
   border: none;
   resize: none;
+  font-family: 'Noto Sans KR', sans-serif;
   &:focus {
     outline: none;
   }
@@ -239,6 +242,10 @@ export const click_dis = styled.div`
   flex-direction: column;
 `;
 
+export const div = styled.div`
+  width: 1000px;
+`;
+
 export const Img = styled.img`
-  height: 300px;
+  width: 990px;
 `;

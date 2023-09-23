@@ -73,6 +73,7 @@ export const Input = styled.input`
   background-color: #f0f0f0;
   border-radius: 10px;
   padding: 0px 14px;
+  font-family: "Noto Sans KR", sans-serif;
   &::placeholder {
     color: black;
   }
