@@ -92,7 +92,9 @@ export const main_text = styled.pre`
   font-size: 12px;
   color: #191c1b;
   padding: 10px 15px;
+  width: 1000px;
   font-family: 'Noto Sans KR', sans-serif;
+  wordBreak: 'break-all';
 `;
 
 export const comment_div = styled.div`

@@ -224,7 +224,15 @@ function ViewPage() {
           <S.tag>{data.state}</S.tag>
         </S.title_div>
         <S.body_main>
-          <S.main_text>{data.content}</S.main_text>
+          <S.main_text
+            style={{
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-all",
+              overflow: "auto",
+            }}
+          >
+            {data.content}
+          </S.main_text>
           <S.div>
             <S.Img
               src={data.file ? data.file : ""}
